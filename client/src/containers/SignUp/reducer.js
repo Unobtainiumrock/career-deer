@@ -30,6 +30,11 @@ export function googleAuthReducer(state = initialState, { type, payload }) {
         ...state,
         ...payload
       }
+    case AUTH_FAILURE:
+      return {
+        ...state,
+        error: payload.error || "Authenticaion failed"
+      }
     default:
       return state;
   }

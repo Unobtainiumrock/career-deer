@@ -36,7 +36,8 @@ mongoose.connect(
   {
     promiseLibrary: bluebird,
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useCreateIndex: true
   }
 );
 

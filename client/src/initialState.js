@@ -76,7 +76,7 @@ export default {
       jobs: []
     },
 
-    ['on-site']: {
+    'on-site': {
       jobs: []
     },
 
