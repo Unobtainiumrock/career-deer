@@ -33,30 +33,43 @@ morganBody(app, {
 
 mongoose.connect(
   process.env.MONGODB_URI || "mongodb://localhost/career-deer",
-  { promiseLibrary: bluebird }
+  {
+    promiseLibrary: bluebird,
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  }
 );
 
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'career deer',
-  store: MongoStore.create({
-    clientPromise: mongoose.connection.asPromise().then(conn => conn.getClient())
-  }),
-  resave: false,
-  saveUninitialized: false
-}));
+mongoose.connection.on("connected", () => {
+  console.log("Mongoose is connected to MongoDB");
 
-app.use(passport.initialize());
-app.use(passport.session());
+  app.use(session({
+    secret: process.env.SESSION_SECRET || "career deer",
+    store: MongoStore.create({
+      clientPromise: Promise.resolve(mongoose.connection.getClient())
+    }),
+    resave: false,
+    saveUninitialized: false
+  }));
 
-//TODO enable once routes are fixed.
-const routes = require('../routes/api/index');
-app.use(routes);
+  app.use(passport.initialize());
+  app.use(passport.session());
+
+  //TODO enable once routes are fixed.
+  const routes = require('../routes/api/index');
+  app.use(routes);
 
 
-// Send every other request to the React app
-// Define any API routes before this runs
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "./client/build/index.html"));
+  // Send every other request to the React app
+  // Define any API routes before this runs
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "./client/build/index.html"));
+  });
+
+  app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
 });
 
-app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
+// Handle connection errors
+mongoose.connection.on('error', err => {
+  console.log('Mongoose connection error:', err);
+});
