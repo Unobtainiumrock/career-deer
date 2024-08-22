@@ -4,7 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
+const MongoStore = require('connect-mongo');
 const bluebird = require('bluebird');
 const mongoose = require('mongoose');
 const logger = require('morgan');
@@ -38,7 +38,9 @@ mongoose.connect(
 
 app.use(session({
   secret: process.env.SESSION_SECRET || 'career deer',
-  store: new MongoStore({ mongooseConnection: mongoose.connection }),
+  store: MongoStore.create({
+    clientPromise: mongoose.connection.asPromise().then(conn => conn.getClient())
+  }),
   resave: false,
   saveUninitialized: false
 }));
