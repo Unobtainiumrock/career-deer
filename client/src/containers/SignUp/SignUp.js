@@ -26,6 +26,9 @@ class SignUp extends Component {
           console.log('Log in with GitHub');
           // this.props.githubSignUpThunk(values);
           break;
+        default:
+          console.warn(`Unhandled authentication type: ${authType}`);
+          break;
       }
     }
   };

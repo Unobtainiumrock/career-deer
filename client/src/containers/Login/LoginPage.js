@@ -5,7 +5,6 @@ import { Container, Col, Row } from '../../components/Grid';
 
 import { connect } from 'react-redux';
 import { login, resetLoginState } from './actions';
-import  { googleSignUp } from '../../utils/API';
 import './Login.css';
 
 import Bounce from 'react-reveal/Bounce';
@@ -15,11 +14,6 @@ class LoginPage extends Component {
     // This calls the login action creator, passing the form values to it
     this.props.login(values);
   };
-
-  // googleLogin = () => {
-  
-  //   googleSignUp()
-  // }
 
   reset() {
     this.props.resetLoginState();

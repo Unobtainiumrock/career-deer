@@ -6,9 +6,11 @@ const passport = require('../../config');
 router.route('/login')
   .post(passport.authenticate('local'), loginController.login)
 
+// Matching with "/api/user/signup"
 router.route('/signup')
   .post(loginController.signUp, loginController.login)
 
+// So on and so forth.
 router.route('/logout')
   .get(loginController.logout)
 
