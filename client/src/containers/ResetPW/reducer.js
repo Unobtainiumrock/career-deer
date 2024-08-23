@@ -1,4 +1,4 @@
-import { PASSWORD_RESET } from './actions';
+import { PASSWORD_RESET, NO_DATA } from './actions';
 import intialState from '../../initialState';
 
 export default function pwResetReducer(state = intialState, { type, payload }) {
@@ -9,6 +9,8 @@ export default function pwResetReducer(state = intialState, { type, payload }) {
                 ...state,
                 ...payload
             }
+        case NO_DATA:
+            return state // this is a placeholder for now. We need to determine whether or not this no data case is needed. It will evolve, based on user flow for password resetting.
         default:
             return state;
     }
