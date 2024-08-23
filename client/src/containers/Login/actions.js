@@ -12,7 +12,7 @@ export const LOGIN_RESET = 'LOGIN_RESET'
 // conditions are met. In our case, we are having different actions dispatched depending on
 // what part of the async process something is happening. This can be useful for transitional
 // rendering, such as having a spinnging loading wheel while awaiting some data to be received from
-// a DB query etc.
+// a DB query etc. --Nicholas
 export function login(userInfo) {
   // return a fn
   return async (dispatch, getState) => {
