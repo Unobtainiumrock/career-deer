@@ -1,4 +1,4 @@
-import { signIn } from '../../utils/API';
+import { logIn } from '../../utils/API';
 
 import { appLoginUpdate } from '../App/actions'
 
@@ -18,7 +18,7 @@ export function login(userInfo) {
   return async (dispatch, getState) => {
     try {
       userInfo.email = userInfo.email.toLowerCase();
-      const apiResponse = await (signIn(userInfo));
+      const apiResponse = await (logIn(userInfo));
       const loginUser = {
         firstName: apiResponse.data.firstName,
         lastName: apiResponse.data.lastName,
@@ -34,6 +34,8 @@ export function login(userInfo) {
   };
 };
 
+
+// To be implemented.
 export function resetLoginState() {
   return {
     type: LOGIN_RESET,

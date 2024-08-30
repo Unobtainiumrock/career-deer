@@ -1,21 +1,21 @@
 
 const axios = require('axios');
 
-// Basic Login/Sign up
-export function signIn(data) {
-  return axios.post('/api/user/login', data);
+export function signUp(data) {
+  return axios.post('/api/auth/signup', data);
 };
 
-export function signUp(data) {
-  return axios.post('/api/user/signup', data);
+
+export function logIn(data) {
+  return axios.post('/api/auth/login', data);
 };
 
 export function logOut() {
-  return axios.get('/api/user/logout');
+  return axios.get('/api/auth/logout');
 }
 
 export function resetPW(email){
-  return axios.post('/api/user/resetpw', email);
+  return axios.post('/api/auth/resetpw', email);
 }
 
 // ======================================================
