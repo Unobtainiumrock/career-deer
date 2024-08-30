@@ -186,10 +186,11 @@ class Board extends Component {
         <Row className="justify-content-center board pt-4">
           {
             Object.entries({ ...this.props.boards }).map(([key, val]) => (
+              // TO DO Review if we actually needed a "component creator"...
               // returns a library's premade component --don't want each of the
               // library components nested in a component wrapper. This is what I'll call a
               // "component creator". It returns a component with different attributes, so we don't 
-              // unnecessarily nest it in a pointless component wrapper.
+              // unnecessarily nest it in a pointless component wrapper. -- Nicholas
               ProgressTile(key, val, this.props.selectUpdateJob)
             ))
           }

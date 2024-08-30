@@ -20,10 +20,13 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+console.log("Node env:", process.env.NODE_ENV)
 // Serve up static assets (usually on heroku)
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
+
+console.log('Node.js exec arguments:', process.execArgv);
 
 app.use(logger('dev'));
 morganBody(app, {

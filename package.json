@@ -6,7 +6,7 @@
 "scripts": {
   "start": "if-env NODE_ENV=production && yarn start:prod || yarn start:dev",
   "start:prod": "node ./backend/server",
-  "start:dev": "concurrently \"yarn nodemon --ignore 'client/*'\" \"yarn client\"",
+  "start:dev": "concurrently \"yarn nodemon --trace-deprecation --ignore 'client/*'\" \"yarn client\"",
   "client": "cd client && yarn start",
   "install": "cd client && yarn install",
   "build": "cd client && yarn build",

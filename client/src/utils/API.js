@@ -1,10 +1,13 @@
-
 const axios = require('axios');
+
+// Consider breaking apart the auth and jobs endpoints into separate API's.
+
+// Auth Endpoints
+// ======================================================
 
 export function signUp(data) {
   return axios.post('/api/auth/signup', data);
 };
-
 
 export function logIn(data) {
   return axios.post('/api/auth/login', data);
@@ -18,7 +21,6 @@ export function resetPW(email){
   return axios.post('/api/auth/resetpw', email);
 }
 
-// ======================================================
 
 // TESTING OAuth Logins
 export function googleSignUp(data) {
@@ -31,7 +33,10 @@ export function googleSignUp(data) {
 // };
 
 // ======================================================
-// Jobs
+
+
+// Jobs Endpoints
+// ======================================================
 export function createJob(data) {
   return axios.post('/api/jobs/saved', data);
 };
@@ -53,8 +58,7 @@ export function updateJobById(id, data) {
   return axios.put(`/api/jobs/saved/${id}`, data);
 };
 
-// ======================================================
-// Chart
+  // Chart =====================
 export function getJobDataAll(){
   return axios.get('/api/jobs/chart/all');
 };
@@ -67,8 +71,7 @@ export function getUserPercentile(saved, applied, phone, onSite, offer){
   return axios.get(`/api/jobs/chart/user/percentile/?saved=${saved}&applied=${applied}&phone=${phone}&onSite=${onSite}&offer=${offer}`);
 };
 
-// ======================================================
-// Search
+// Search =====================
 export function getSearchResults(keywords, location){
   return axios.get(`/api/jobs/search/?keywords=${keywords}&location=${location}`);
 };
