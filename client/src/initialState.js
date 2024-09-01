@@ -10,6 +10,7 @@ export default {
     error: null,
   },
   pwReset: {
+    email: '',
     status: false,
     error: null
   },
