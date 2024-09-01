@@ -6,29 +6,33 @@ import Button from '@material-ui/core/Button';
 
 class ResetPW extends Component {
 
-    componentDidMount(){
+    // componentDidMount(){
 
-    }
+    // }
 
-    pwReset = values => {
-        this.props.postResetPassword(values);
+    pwReset = () => {
+        const email = 'user@example.com'
+        // Eventually use this
+        // const email = this.state.email
+        this.props.postResetPassword(email);
     }
 
 render() {
     return (
         <Container>
-        <Row className="justify-content-center text-center">
-            <Col size="10">
-            <Button
-            variant="extendedFab" 
-            color="secondary"
-            onClick={this.pwReset}
-            >
-            Chicken</Button>
-            </Col>
-        </Row>  
+            <Row className="justify-content-center text-center">
+                    <Col size="10">
+                        <Button
+                        variant="extendedFab" 
+                        color="secondary"
+                        onClick={this.pwReset}
+                        >
+                        Chicken
+                        </Button>
+                    </Col>
+            </Row>  
         </Container>
-    )
+    );
 }
 }
 

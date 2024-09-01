@@ -7,10 +7,15 @@ export default function pwResetReducer(state = intialState, { type, payload }) {
         case PASSWORD_RESET:
             return {
                 ...state,
-                ...payload
-            }
+                email: payload.email,
+                pwReset: payload.pwReset
+            };
         case NO_DATA:
-            return state // this is a placeholder for now. We need to determine whether or not this no data case is needed. It will evolve, based on user flow for password resetting.
+            return {
+                ...state,
+                pwReset: null,
+                error: payload.error
+            };
         default:
             return state;
     }
