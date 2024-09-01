@@ -41,7 +41,7 @@ export function createJob(data) {
   return axios.post('/api/jobs/saved', data);
 };
 
-export function getAllJobs() {
+export function findAllJobsForUser() {
   return axios.get('/api/jobs/saved');
 };
 
@@ -59,7 +59,7 @@ export function updateJobById(id, data) {
 };
 
   // Chart =====================
-export function getJobDataAll(){
+export function aggregateJobDataForCharts() {
   return axios.get('/api/jobs/chart/all');
 };
 

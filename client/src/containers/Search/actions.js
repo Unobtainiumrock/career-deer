@@ -1,4 +1,4 @@
-import { getSearchResults, createJob, getAllJobs } from '../../utils/API';
+import { getSearchResults, createJob, findAllJobsForUser } from '../../utils/API';
 
 export const SEARCH_SUCCESS = 'SEARCH_SUCCESS';
 export const SEARCH_FAILED = 'SEARCH_FAILED';
@@ -34,7 +34,7 @@ export function postSaveJob(saveInfo){
 export function getAllSavedJobs(){
   return async (dispatch, getState) => {
     try {
-      const apiResponse = await getAllJobs();
+      const apiResponse = await findAllJobsForUser();
       dispatch(updateSaved(apiResponse.data))
 
     } catch(err) {

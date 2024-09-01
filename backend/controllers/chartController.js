@@ -1,7 +1,7 @@
 const db = require('../models');
 
 module.exports = {
-  findAll: async (req, res) => {
+  aggregateJobDataForCharts: async (req, res) => {
     try {
       res.json(await db.Job.aggregate([{
         "$group": {

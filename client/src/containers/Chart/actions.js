@@ -1,4 +1,4 @@
-import { getJobDataAll, getJobDataUser, getUserPercentile } from '../../utils/API';
+import { aggregateJobDataForCharts, getJobDataUser, getUserPercentile } from '../../utils/API';
 
 export const CHART_ALL = 'CHART_ALL';
 
@@ -22,7 +22,7 @@ export function getChartAllData() {
 
 //Get all database info and return as an array.
 function getDBData() {
-  const dataAll = getJobDataAll();
+  const dataAll = aggregateJobDataForCharts();
   const dataUser = getJobDataUser();
 
   return Promise.all([dataAll, dataUser])

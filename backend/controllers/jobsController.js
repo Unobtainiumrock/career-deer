@@ -1,7 +1,7 @@
 const db = require('../models');
 
 module.exports = {
-  findAll: async (req, res) => {
+  findAllJobsForUser: async (req, res) => {
     if (req.user) {
       try {
         let query = {
@@ -15,7 +15,7 @@ module.exports = {
       res.status(401).json("Unauthorized request. Please log in.")
     }
   },
-  create: async (req, res) => {
+  createJob: async (req, res) => {
     if (req.user) {
       try {
         const newJob = {

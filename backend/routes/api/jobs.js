@@ -10,8 +10,8 @@ router.route('/search/?')
 
 // Matching with "/api/jobs/saved"
 router.route('/saved')
-  .get(jobsController.findAll)
-  .post(jobsController.create)
+  .get(jobsController.findAllJobsForUser)
+  .post(jobsController.createJob)
 
 // Matching with "/api/jobs/saved/:id"
 // For retrieving/deleting/updating info on 1 job
@@ -22,7 +22,7 @@ router.route('/saved/:id')
 
 // Matching with "/api/jobs/chart/all"
 router.route('/chart/all')
-  .get(chartController.findAll)
+  .get(chartController.aggregateJobDataForCharts)
 
 router.route('/chart/user')
   .get(chartController.findUser)

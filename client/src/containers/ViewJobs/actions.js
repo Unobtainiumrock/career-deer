@@ -1,4 +1,4 @@
-import { getAllJobs } from '../../utils/API';
+import { findAllJobsForUser } from '../../utils/API';
 
 export const VIEWJOBS_SUCCESS = 'VIEWJOBS_RESET';
 export const VIEWJOBS_RESET = 'VIEWJOBS_RESET';
@@ -6,7 +6,7 @@ export const VIEWJOBS_RESET = 'VIEWJOBS_RESET';
 export function getAllSavedJobs(){
   return async (dispatch, getState) => {
     try {
-      const apiResponse = await getAllJobs();
+      const apiResponse = await findAllJobsForUser();
       dispatch(updateViewJobs(apiResponse.data))
 
     } catch(err) {

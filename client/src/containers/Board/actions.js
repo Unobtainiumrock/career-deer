@@ -1,4 +1,4 @@
-import { getAllJobs } from '../../utils/API';
+import { findAllJobsForUser } from '../../utils/API';
 export const JOBS_SUCCESS = "JOBS_SUCCESS";
 export const JOBS_FAIL = "JOBS_FAIL";
 export const MOVE_JOB = "MOVE_JOB";
@@ -6,7 +6,7 @@ export const MOVE_JOB = "MOVE_JOB";
 export function grabJobs() {
 	return async (dispatch, getState) => {
 		try {
-      const apiResponse = await (getAllJobs());
+      const apiResponse = await (findAllJobsForUser());
 			dispatch(grabJobsSuccess(apiResponse.data));
 		}
 		catch (err){
