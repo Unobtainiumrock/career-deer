@@ -1,18 +1,22 @@
 {
   "name": "career-deer",
   "version": "1.0.0",
-  "description": "Job Task Tracker",
+  "description": "Job Task Tracker - Backend",
   "main": "./backend/server",
-"scripts": {
-  "start": "if-env NODE_ENV=production && yarn start:prod || yarn start:dev",
-  "start:prod": "node ./backend/server",
-  "start:dev": "concurrently \"yarn nodemon --trace-deprecation --ignore 'client/*'\" \"yarn client\"",
-  "client": "cd client && yarn start",
-  "install": "cd client && yarn install",
-  "build": "cd client && yarn build",
-  "heroku-postbuild": "yarn build"
-},
-  "author": "",
+  "scripts": {
+    "start": "if-env NODE_ENV=production && yarn start:prod || yarn start:dev",
+    "start:prod": "node ./backend/server",
+    "start:dev": "concurrently \"yarn nodemon --trace-deprecation --ignore 'client/*'\" \"yarn client\"",
+    "client": "cd client && yarn start",
+    "install": "cd client && yarn install",
+    "build": "cd client && yarn build",
+    "heroku-postbuild": "yarn build"
+  },
+  "author": "Nicholas Fleischhauer <nicholasfleischhaue@berkeley.edu>",
+  "createdBy": "The loving Career Deer team: Robert, Eric, Jimmy, and Nicholas",
+  "maintainedBy": [
+    "Nicholas Fleischhauer <nicholasfleischhaue@berkeley.edu>"
+  ],
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^3.5.0",
@@ -23,8 +27,6 @@
     "bcrypt-nodejs": "^0.0.3",
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",
-    "chart.js": "^2.7.2",
-    "chartjs-plugin-datalabels": "^0.3.0",
     "cheerio": "^1.0.0-rc.2",
     "connect-mongo": "^5.1.0",
     "cors": "^2.8.4",
@@ -33,8 +35,8 @@
     "express-session": "^1.15.6",
     "if-env": "^1.0.4",
     "ini": "^4.1.3",
-    "material-ui": "^0.15.0",
     "moment": "^2.22.2",
+    "mongodb": "^6.0.0",
     "mongoose": "^5.2.0",
     "morgan": "^1.9.0",
     "morgan-body": "^2.4.0",
@@ -44,19 +46,7 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^5.0.1",
-    "random-hash": "^4.0.1",
-    "react-beautiful-dnd": "^8.0.2",
-    "react-burger-menu": "^2.5.2",
-    "react-chartjs-2": "^2.7.2",
-    "react-cookie": "^2.2.0",
-    "react-redux": "^5.0.7",
-    "react-render-html": "^0.6.0",
-    "react-reveal": "^1.2.2",
-    "react-scrollchor": "^6.0.0",
-    "redux": "^4.0.0",
-    "redux-burger-menu": "^0.2.7",
-    "redux-form": "^7.4.2",
-    "redux-form-material-ui": "^4.2.0",
-    "redux-thunk": "^2.3.0"
+    "prop-types": "^15.8.1",
+    "random-hash": "^4.0.1"
   }
 }

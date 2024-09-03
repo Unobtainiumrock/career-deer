@@ -51,6 +51,33 @@ There is a lot of room to improve the application in terms of how users interact
 
 10. **Find fresh sources of data to inject into the platform**
 
+11. **Resolve Node Modules Warnings**
+
+12. **Add Error Handling to auth controller**
+
+The authentication process for logging in needs to handle edge cases.
+
+13. **Check How long Password reset links last for**
+
+Self explanatory.
+
+14. **Update base url for handling user password reset & updates**
+
+The website will eventually be deployed to some place other than Heroku. The base url in authController.js will need to be changed.
+
+```
+warning bcrypt-nodejs@0.0.3: bcrypt-nodejs is no longer actively maintained. Please use bcrypt or bcryptjs. See https://github.com/kelektiv/node.bcrypt.js/wiki/bcrypt-vs-brypt.js to learn more about these two options
+warning if-env > npm-run-all > babel-polyfill > core-js@2.6.12: core-js@<3.23.3 is no longer maintained and not recommended for usage due to the number of issues. Because of the V8 engine whims, feature detection in old core-js versions could cause a slowdown up to 100x even if nothing is polyfilled. Some versions have web compatibility issues. Please, upgrade your dependencies to the actual version of core-js.
+warning if-env > npm-run-all > babel-polyfill > babel-runtime > core-js@2.6.12: core-js@<3.23.3 is no longer maintained and not recommended for usage due to the number of issues. Because of the V8 engine whims, feature detection in old core-js versions could cause a slowdown up to 100x even if nothing is polyfilled. Some versions have web compatibility issues. Please, upgrade your dependencies to the actual version of core-js.
+warning mongoose > @types/mongodb > @types/bson@4.2.0: This is a stub types definition. bson provides its own type definitions, so you do not need this installed.
+warning nodemon > chokidar@2.1.8: Chokidar 2 does not receive security updates since 2019. Upgrade to chokidar 3 with 15x fewer dependencies
+warning nodemon > chokidar > fsevents@1.2.13: The v1 package contains DANGEROUS / INSECURE binaries. Upgrade to safe fsevents v2
+warning nodemon > chokidar > braces > snapdragon > source-map-resolve@0.5.3: See https://github.com/lydell/source-map-resolve#deprecated
+warning nodemon > chokidar > braces > snapdragon > source-map-resolve > resolve-url@0.2.1: https://github.com/lydell/resolve-url#deprecated
+warning nodemon > chokidar > braces > snapdragon > source-map-resolve > source-map-url@0.4.1: See https://github.com/lydell/source-map-url#deprecated
+warning nodemon > chokidar > braces > snapdragon > source-map-resolve > urix@0.1.0: Please see https://github.com/lydell/urix#deprecated
+```
+
 
 # For Me
 

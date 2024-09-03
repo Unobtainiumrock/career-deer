@@ -22,9 +22,9 @@ app.use(bodyParser.json());
 
 console.log("Node env:", process.env.NODE_ENV)
 // Serve up static assets (usually on heroku)
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static("client/build"));
-}
+// if (process.env.NODE_ENV === "production") {
+//   app.use(express.static(path.join(__dirname, 'client/build')));
+// }
 
 console.log('Node.js exec arguments:', process.execArgv);
 
@@ -67,7 +67,8 @@ mongoose.connection.on("connected", () => {
   // Send every other request to the React app
   // Define any API routes before this runs
   app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "./client/build/index.html"));
+    console.log("Dirname:", __dirname)
+    res.sendFile(path.join(__dirname, "../../client/build/index.html"));
   });
 
   app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
