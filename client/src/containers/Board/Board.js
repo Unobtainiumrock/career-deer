@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { updateJobById } from '../../utils/API';
 import { Row, Col } from '../../components/Grid';
 import ProgressTile from '../../components/ProgressTile/ProgressTile';
-import { Cookies } from 'react-cookie';
+// import { Cookies } from 'react-cookie';
 
 import Jump from 'react-reveal/Jump';
 
@@ -15,6 +16,9 @@ import {
   grabJobs,
   moveJob
 } from './actions';
+
+// Revisit this
+// import { copy } from '../../../../backend/routes/api';
 
 
 const reorder = (list, startIndex, endIndex) => {
@@ -51,7 +55,7 @@ const move = (source, destination, droppableSource, droppableDestination) => {
 
 class Board extends Component {
   
-  cookies = new Cookies();
+  // cookies = new Cookies();
 
   componentDidMount() {
     console.log('Grabbing Jobs..');
@@ -144,12 +148,16 @@ class Board extends Component {
 
   render() {
     
-    if (!this.cookies.get("email")){
-      window.location.pathname="/unauthorized";
-      return null;
-    };
+    // if (!this.cookies.get("email")){
+    //   window.location.pathname="/unauthorized";
+    //   return null;
+    // };
 
     console.log(this.props.boards);
+
+    if (!this.props.app.user){
+      return <Redirect to='/unauthorized' />
+    };
 
     if (this.props.boards.saved.length === 0 && 
         this.props.boards.applied.length === 0 &&

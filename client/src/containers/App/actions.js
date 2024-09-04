@@ -1,7 +1,14 @@
-import { logOut } from '../../utils/API';
+import { logOut, initialLoad } from '../../utils/API';
 
 export const APP_LOGIN = 'APP_LOGIN_UPDATE';
 export const APP_LOGOUT = 'APP_LOGOUT';
+
+export function appInitialLoad() {
+  return async (dispatch) => {
+    const user = await initialLoad();
+    return dispatch(appLoginUpdate(user.data));
+  }
+}
 
 export function appLoginUpdate(loginData) {
   return {

@@ -14,21 +14,24 @@ class SignUp extends Component {
       this.props.signUpThunk(values);
     } else {
       switch (authType) {
-        case 'google':
-          console.log('Log in with Google');
-          this.props.googleSignUpThunk(values);
-          break;
-        case 'facebook':
-          console.log('Log in with Facebook');
-          // this.props.faceBookSignUpthunk(values);
-          break;
-        case 'github':
-          console.log('Log in with GitHub');
-          // this.props.githubSignUpThunk(values);
-          break;
         default:
-          console.warn(`Unhandled authentication type: ${authType}`);
+          this.props.signUpThunk(values);
           break;
+        // case 'google':
+        //   console.log('Log in with Google');
+        //   this.props.googleSignUpThunk(values);
+        //   break;
+        // case 'facebook':
+        //   console.log('Log in with Facebook');
+        //   // this.props.faceBookSignUpthunk(values);
+        //   break;
+        // case 'github':
+        //   console.log('Log in with GitHub');
+        //   // this.props.githubSignUpThunk(values);
+        //   break;
+        // default:
+        //   console.warn(`Unhandled authentication type: ${authType}`);
+        //   break;
       }
     }
   };
@@ -76,19 +79,22 @@ class SignUp extends Component {
 };
 
 const renderError = (signedUpState, appState) => {
-  if (!appState.user && signedUpState.error) {
-    if (signedUpState.error.response)
-      if (signedUpState.error.response.data) {
-        if (signedUpState.error.response.data.name === "ValidationError")
-          return "You must enter a first name, last name, and an email.";
-        if (signedUpState.error.response.data.name === "MissingPasswordError")
-          return "You must enter a password.";
-        if (signedUpState.error.response.data.code === 11000)
-          return "An account with that email already exists. Please choose another email.";
-      };
-  };
-  return "";
+  if (!appState.user && signedUpState.error?.response?.data) {
+    const { name, code } = signedUpState.error.response.data;
+    
+    if (name === "MissingFirstNameError") 
+      return "You must enter a first name.";
+    if (name === "MissingLastNameError") 
+      return "You must enter a last name.";
+    if (name === "MissingEmailError") 
+      return "You must enter an email.";
+    if (name === "MissingPasswordError") 
+      return "You must enter a password.";
+    if (code === 11000) 
+      return "An account with that email already exists. Please choose another email.";
+  }
 };
+
 
 // Only need SignUp to be aware of the sign up state.
 const mapStateToProps = (state, props) => {

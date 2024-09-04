@@ -14,6 +14,10 @@ router.route('/google/redirect')
     failureRedirect: '/login'
   }));
 
+
+router.route('/load')
+  .get(authController.initialLoad);
+
 // Matching with /api/auth/signup
 router.route('/signup')
   .post(authController.signUp, authController.login);

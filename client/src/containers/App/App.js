@@ -23,7 +23,7 @@ import ResetPW from '../ResetPW/ResetPW';
 
 // Redux stuff
 import { connect } from 'react-redux';
-import { appLoginUpdate, appLogoutUpdate } from './actions';
+import { appLoginUpdate, appLogoutUpdate, appInitialLoad } from './actions';
 
 class App extends Component {
   cookies = new Cookies()

@@ -1,7 +1,8 @@
 // this is in a seperate file both for accessibility and to make the index.js much cleaner
 export default {
   app: {
-    user: null
+    loading: true,
+    user: null,
   },
   loggedIn: {
     error: null,

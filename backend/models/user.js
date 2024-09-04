@@ -25,7 +25,7 @@ const userSchema = new Schema({
     require: false,
     default: null
   }
-})
+});
 
 userSchema.plugin(passportLocalMongoose, {
   //Updating username field to email rather than default "username" from LocalStrategy

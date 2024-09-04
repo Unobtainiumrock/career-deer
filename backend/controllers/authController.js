@@ -10,6 +10,19 @@ module.exports = {
     res.json('I am hit!');
   },
 
+  initialLoad: (req, res) => {
+    let user = false;
+    console.log(req.user);
+    if (req.user) {
+      user = {
+          email: req.user.email,
+          firstName: req.user.firstName,
+          lastName: req.user.lastName
+      }
+    }
+    res.json(user);
+  },
+
   signUp: async (req, res, next) => {
     try {
       const { email, firstName, lastName, password } = req.body;

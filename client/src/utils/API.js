@@ -5,6 +5,10 @@ const axios = require('axios');
 // Auth Endpoints
 // ======================================================
 
+export function initialLoad() {
+  return axios.get('api/auth/load');
+}
+
 export function signUp(data) {
   return axios.post('/api/auth/signup', data);
 };

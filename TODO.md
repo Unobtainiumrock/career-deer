@@ -63,6 +63,10 @@ Self explanatory.
 
 14. **Update base url for handling user password reset & updates**
 
+15. **Revisit the import copy line in Board.js**
+
+Not sure if this is still being implemented.
+
 The website will eventually be deployed to some place other than Heroku. The base url in authController.js will need to be changed.
 
 ```
