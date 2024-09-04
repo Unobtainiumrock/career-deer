@@ -26,7 +26,7 @@ import { connect } from 'react-redux';
 import { appLoginUpdate, appLogoutUpdate, appInitialLoad } from './actions';
 
 class App extends Component {
-  cookies = new Cookies()
+  // cookies = new Cookies()
 
   loginAction = user => {
     this.props.appLoginUpdate(user);
@@ -37,17 +37,22 @@ class App extends Component {
   }
 
   componentDidMount() {
-    // const session = this.cookies.get("connect.sid");
-    const firstName = this.cookies.get("firstName");
-    const lastName = this.cookies.get("lastName");
-    const email = this.cookies.get("email");
-    if (firstName && lastName && email) {
-      const user = {
-        firstName,
-        lastName,
-        email
-      }
-      this.loginAction(user)
+    this.props.appInitialLoad();
+  }
+
+  selectNav() {
+    if (this.props.app.Loading) {
+      return null;
+    }
+
+    if (this.props.app.user) {
+      return (<BurgerMenu
+        firstName={this.props.app.user ? this.props.app.user.firstName : "Stray"}
+        lastName={this.props.app.user ? this.props.app.user.lastName: "Deer"}
+        logoutAction={this.logoutAction} />
+      );
+    } else {
+      return (<Nav />);
     }
   }
 
@@ -55,19 +60,7 @@ class App extends Component {
     return (
       <Router>
         <div id="outer-container">
-          {(window.location.pathname === "/chart" ||
-            window.location.pathname === "/addjob" ||
-            window.location.pathname === "/search" ||
-            window.location.pathname === "/board" ||
-            window.location.pathname === "/updatejob" ||
-            window.location.pathname === "/viewjobs"
-            ? 
-              <BurgerMenu 
-              firstName={this.props.app.user ? this.props.app.user.firstName : "Stray"} 
-              lastName={this.props.app.user ? this.props.app.user.lastName : "Deer"} 
-              logoutaction={this.logoutAction} />
-            : 
-              <Nav />)}
+          {this.selectNav()}
           <main id="page-wrap">
           <Switch>
             <Route exact path="/" component={Home} />
@@ -97,7 +90,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, props) => ({
   appLoginUpdate,
-  appLogoutUpdate
+  appLogoutUpdate,
+  appInitialLoad
 })
 
 export default connect(mapStateToProps,mapDispatchToProps())(App);

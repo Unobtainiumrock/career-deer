@@ -64,7 +64,7 @@ export default {
       }
     }
   },
-  boards: {
+  boards: { 
     // Think of progress_stage as an id here.
     saved: {
       jobs: []
@@ -87,6 +87,6 @@ export default {
     }
   },
   burgerMenu: {
-    isOpen: false
+    isOpen: true
   }
 };

@@ -25,8 +25,7 @@ class LoginPage extends Component {
 
   render() {
 
-    if (this.props.app.user && !this.props.loggedIn.error) {
-
+    if (this.props.app.user){
       return <Redirect to='/board' />
     };
 

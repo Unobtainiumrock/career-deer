@@ -62,7 +62,7 @@ let SignUpForm = (props) => {
         <Button variant="contained" color="primary" className="btn btn-info" type="submit" disabled={pristine || submitting}>
           Sign Up
         </Button>
-        <Button onClick={() => props.onSubmit(null,'google')} className="roboto login-btn btn btn-light" >
+        {/* <Button onClick={() => props.onSubmit(null,'google')} className="roboto login-btn btn btn-light" >
           Sign Up with&nbsp; <img className="ml-1" height="20px" src="/imgs/icons/google-logo.svg" alt="google logo" />
         </Button>
         <Button onClick={() => props.onSubmit(null,'facebook')} className="roboto login-btn btn btn-light">
@@ -70,7 +70,7 @@ let SignUpForm = (props) => {
         </Button>
         <Button onClick={() => props.onSubmit(null,'github')} className="roboto login-btn btn btn-light" >
           Sign Up with&nbsp; <i className="fab fa-github"></i>
-        </Button>
+        </Button> */}
         </Col>
       </Row>
     </form>

@@ -14,6 +14,7 @@ export function appLoginUpdate(loginData) {
   return {
     type: APP_LOGIN,
     payload: {
+      loading: false,
       user: loginData
     }
   }

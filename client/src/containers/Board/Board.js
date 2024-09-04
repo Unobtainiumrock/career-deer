@@ -211,7 +211,8 @@ class Board extends Component {
 
 const mapStateToProps = (state, props) => {
   return {
-    boards: state.boards
+    boards: state.boards,
+    app: state.app
   }
 }
 
