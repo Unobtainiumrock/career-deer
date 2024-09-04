@@ -1,19 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// import { Cookies } from 'react-cookie';
-import { Redirect } from 'react-router-dom';
+import { Redirect } from "react-router-dom";
 import { Bar, Line, Doughnut } from 'react-chartjs-2';
 import { getChartAllData } from './actions';
 import { Col, Row, Container } from '../../components/Grid';
-// import 'chartjs-plugin-datalabels';
 
 import './Chart.css';
 import Tada from 'react-reveal/Tada';
 
 
 class Chart extends Component {
-  
-  // cookies = new Cookies();
 
   componentDidMount() {
     this.props.getChartAllData();
@@ -363,5 +359,3 @@ const mapDispatchToProps = (dispatch, props) => ({
 })
 
 export default connect(mapStateToProps, mapDispatchToProps())(Chart);
-
-

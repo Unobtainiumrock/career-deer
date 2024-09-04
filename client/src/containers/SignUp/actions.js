@@ -35,8 +35,9 @@ export function signUpThunk(userInfo) {
       dispatch(failedSignUp(err));
     };
   };
-};
+}
 
+// Finish the Google Signup
 export function googleSignUpThunk(/*data?*/) {
   return async (dispatch) => {
     try {
@@ -67,7 +68,7 @@ function signedUp() {
       error: null
     }
   };
-};
+}
 
 function failedSignUp(err) {
   return {
@@ -76,7 +77,7 @@ function failedSignUp(err) {
       error: err
     } 
   };
-};
+}
 
 // *
 export function resetSignUp() {

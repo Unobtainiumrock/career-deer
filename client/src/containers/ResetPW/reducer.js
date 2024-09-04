@@ -1,4 +1,4 @@
-import { PASSWORD_RESET, NO_DATA } from './actions';
+import { PASSWORD_RESET, RESET_PASSWORD_RESET } from './actions';
 import intialState from '../../initialState';
 
 export default function pwResetReducer(state = intialState, { type, payload }) {
@@ -7,15 +7,13 @@ export default function pwResetReducer(state = intialState, { type, payload }) {
         case PASSWORD_RESET:
             return {
                 ...state,
-                email: payload.email,
-                pwReset: payload.pwReset
-            };
-        case NO_DATA:
+                ...payload
+            }
+        case RESET_PASSWORD_RESET:
             return {
                 ...state,
-                pwReset: null,
-                error: payload.error
-            };
+                ...payload
+            }
         default:
             return state;
     }

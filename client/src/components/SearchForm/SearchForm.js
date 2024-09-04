@@ -32,7 +32,6 @@ const FormStyle = {
   boxShadow: '0px 0px 1px #5B5B5B'
 }
 
-
 let SearchForm = ({ handleSubmit, pristine, submitting, errorMessage }) => {
   return (
     <Col size="12 col-md-12 lg-5">
@@ -61,6 +60,4 @@ SearchForm = reduxForm({
   validate
 })(SearchForm);
 
-
 export default SearchForm;
-

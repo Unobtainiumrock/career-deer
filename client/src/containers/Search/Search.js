@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
+
 import SearchForm from '../../components/SearchForm';
 import SearchResults from '../../components/SearchResults';
 import { Container, Col, Row } from '../../components/Grid';
 
 import { connect } from 'react-redux';
-// import { Cookies } from 'react-cookie';
+
 import { getSearchJobs, postSaveJob, getAllSavedJobs } from './actions';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
@@ -19,8 +20,6 @@ const huntStyle = {
 }
 
 class Search extends Component {
-
-  // cookies = new Cookies();
 
   searchJobs = values => {
     // Calling the search job action.

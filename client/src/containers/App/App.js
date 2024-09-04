@@ -50,9 +50,9 @@ class App extends Component {
         firstName={this.props.app.user ? this.props.app.user.firstName : "Stray"}
         lastName={this.props.app.user ? this.props.app.user.lastName: "Deer"}
         logoutAction={this.logoutAction} />
-      );
+      )
     } else {
-      return (<Nav />);
+      return (<Nav />)
     }
   }
 
@@ -71,8 +71,9 @@ class App extends Component {
             <Route exact path="/search" component={Search} />
             <Route exact path="/board" component={Board} />
             <Route exact path="/updatejob" component={UpdateJob} />
-            <Route exact path ="/viewjobs" component={ViewJobs} />
+            {/* <Route exact path ="/viewjobs" component={ViewJobs} /> */}
             <Route exact path ="/forgotpw" component={ResetPW} />
+            <Route path ="/updatepw" component={UpdatePW} />
             <Route exact path ="/loading" component={Loading} />
             <Route component={NoMatch} />
           </Switch>

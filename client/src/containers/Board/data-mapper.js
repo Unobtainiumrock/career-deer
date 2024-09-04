@@ -1,5 +1,6 @@
 
 // TODO: Change the progress_stage stings to constants to avoid mis-spellings?
+// TODO: Add author comments to this nice function I made.
 
 /**
  * Takes an array of objects and maps the values to the corresponding inital state's

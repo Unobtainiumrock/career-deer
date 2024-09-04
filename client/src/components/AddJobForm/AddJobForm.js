@@ -97,7 +97,7 @@ let AddJobForm = ({ handleSubmit, pristine, reset, submitting, errorMessage }) =
       </Col>
     </Row>
     </form>
-  );
+  )
 };
 
 AddJobForm = reduxForm({
@@ -110,5 +110,5 @@ AddJobForm = reduxForm({
 
 // Inside this file, we wrapped our component inside the imported 'reduxForm' function
 // We can think of reduxForm() from redux-form behaving similar to connect() from react-redux in
-// terms of connecting a component to communicate with the store 
+// terms of connecting a component to communicate with the store --Nicholas
 export default AddJobForm;

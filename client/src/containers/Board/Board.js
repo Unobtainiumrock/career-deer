@@ -4,18 +4,14 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import { updateJobById } from '../../utils/API';
 import { Row, Col } from '../../components/Grid';
 import ProgressTile from '../../components/ProgressTile/ProgressTile';
-// import { Cookies } from 'react-cookie';
 
 import Jump from 'react-reveal/Jump';
 
 // Redux Stuff
 import { connect } from 'react-redux';
-import { selectUpdateJob } from '../../containers/UpdateJob/actions';
+import { selectUpdateJob, resetUpdateJob } from '../../containers/UpdateJob/actions';
 
-import {
-  grabJobs,
-  moveJob
-} from './actions';
+import { grabJobs, moveJob, executeDeleteJob, jobBoardLoadReset } from './actions';
 
 // Revisit this
 // import { copy } from '../../../../backend/routes/api';
@@ -33,6 +29,10 @@ const move = (source, destination, droppableSource, droppableDestination) => {
   const destClone = [...destination];
   const [removed] = sourceClone.splice(droppableSource.index, 1);
 
+  removed.progress_stage = droppableDestination.droppableId;
+  // console.log("----------------")
+  // console.log(removed)
+  // console.log("----------------")
   destClone.splice(droppableDestination.index, 0, removed);
 
   const result = {};
@@ -42,20 +42,7 @@ const move = (source, destination, droppableSource, droppableDestination) => {
   return result;
 };
 
-// Save incase it was needed later.
-// const houseStyle = {
-//   display: "block",
-//   position: "fixed",
-//   top: "50%",
-//   left: "50%",
-//   height: "300px",
-//   marginLeft: "-150px"
-// }
-
-
 class Board extends Component {
-  
-  // cookies = new Cookies();
 
   componentDidMount() {
     console.log('Grabbing Jobs..');
@@ -102,7 +89,7 @@ class Board extends Component {
       source.index !== destination.index ||
       source.droppableId !== destination.droppableId
     ) {
-      const result = move(
+      const {removed, ...result} = move(
         this.getList(source.droppableId),
         this.getList(destination.droppableId),
         source,
@@ -120,44 +107,41 @@ class Board extends Component {
       // console.log(draggableId); 
       // ======================================================================================
 
-      // HACKY VERSION================================
-      let job;
-      // el is representative of a job object
-      Object.entries({...result})[1][1].forEach(el => {
-        let copy = {...el};
-        if (copy._id === draggableId) {
-          copy.progress_stage = destination.droppableId;
-          job = copy;
-        }
-      });
-      // console.log(job);
-      updateJobById(draggableId,job)
-        // .then(data => console.log(data));
-        // note: non-hacky version won't have to iterate the result to find the thing
-        // we would already have access to if the draggableId was mapped to the job Object containing
-        // the matching ID.
-      // ===============================================
+      // // HACKY VERSION================================
+      // let job;
+      // // el is representative of a job object
+      // Object.entries({...result})[1][1].forEach(el => {
+      //   let copy = {...el};
+      //   if (copy._id === draggableId) {
+      //     copy.progress_stage = destination.droppableId;
+      //     job = copy;
+      //   }
+      // });
+      // // console.log(job);
+      // updateJobById(draggableId,job)
+      //   // .then(data => console.log(data));
+      //   // note: non-hacky version won't have to iterate the result to find the thing
+      //   // we would already have access to if the draggableId was mapped to the job Object containing
+      //   // the matching ID.
+      // // ===============================================
 
-
-      // console.log('On Drag End: result', result);
-      this.props.moveJob(null,null,result)
+      this.props.moveJob(null,null,result);
+      updateJobById(draggableId,removed);
     }
 
   };
 
 
   render() {
-    
-    // if (!this.cookies.get("email")){
-    //   window.location.pathname="/unauthorized";
-    //   return null;
-    // };
-
-    console.log(this.props.boards);
 
     if (!this.props.app.user){
       return <Redirect to='/unauthorized' />
     };
+
+    
+    if (this.props.jobBoard.loading) {
+      return <Loading />
+    }
 
     if (this.props.boards.saved.length === 0 && 
         this.props.boards.applied.length === 0 &&
@@ -181,45 +165,43 @@ class Board extends Component {
     }
 
     return (
+      <Fade top duration={500}>
       <div>
       <DragDropContext onDragEnd={this.onDragEnd} >
         <Row className="justify-content-center text-center pt-5 mx-0 px-0">
           <Col size="12 md-12 lg-6">
             <h1 className="montserrat font-weight-bold">Job Tracker Board</h1>
-            <Jump>
               <img width="60%" src="/imgs/icons/houses.svg" alt="houses" />
-            </Jump>
           </Col>
         </Row>
-        <Row className="justify-content-center board pt-4">
+        <Row className="justify-content-center board pt-4 mx-0 px-0">
           {
-            Object.entries({ ...this.props.boards }).map(([key, val]) => (
-              // TO DO Review if we actually needed a "component creator"...
-              // returns a library's premade component --don't want each of the
-              // library components nested in a component wrapper. This is what I'll call a
-              // "component creator". It returns a component with different attributes, so we don't 
-              // unnecessarily nest it in a pointless component wrapper. -- Nicholas
-              ProgressTile(key, val, this.props.selectUpdateJob)
+            Object.entries(this.props.boards).map(([key, val]) => (
+              <ProgressTile key={key} name={key} jobsList={val} updateJob={this.props.selectUpdateJob} deleteJob={this.props.executeDeleteJob} />
             ))
           }
         </Row>
       </DragDropContext>
       </div>
-    );
+      </Fade>
+    )
   }
 }
 
 const mapStateToProps = (state, props) => {
   return {
+    jobBoard: state.jobBoard,
     boards: state.boards,
     app: state.app
   }
 }
-
 const mapDispatchToProps = () => ({
   grabJobs,
   moveJob,
-  selectUpdateJob
+  executeDeleteJob,
+  selectUpdateJob,
+  resetUpdateJob,
+  jobBoardLoadReset
 });
 
 // Put the things into the DOM!

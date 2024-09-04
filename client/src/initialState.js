@@ -2,7 +2,7 @@
 export default {
   app: {
     loading: true,
-    user: null,
+    user: null
   },
   loggedIn: {
     error: null,
@@ -11,7 +11,10 @@ export default {
     error: null,
   },
   pwReset: {
-    email: '',
+    status: false,
+    error: null
+  },
+  pwUpdate: {
     status: false,
     error: null
   },
@@ -23,10 +26,6 @@ export default {
     status: false,
     error: null,
     job: null
-  },
-  viewJobs: {
-    data: [],
-    edit: null
   },
   searchData: {
     loading: false,
@@ -64,27 +63,16 @@ export default {
       }
     }
   },
-  boards: { 
+  jobBoard: {
+    loading: true
+  },
+  boards: {
     // Think of progress_stage as an id here.
-    saved: {
-      jobs: []
-    },
-
-    applied: {
-      jobs: []
-    },
-
-    phone: {
-      jobs: []
-    },
-
-    'on-site': {
-      jobs: []
-    },
-
-    offer: {
-      jobs: []
-    }
+    saved: [],
+    applied: [],
+    phone: [],
+    'on-site': [],  
+    offer: [],   
   },
   burgerMenu: {
     isOpen: true

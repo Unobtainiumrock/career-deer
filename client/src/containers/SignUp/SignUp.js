@@ -9,39 +9,34 @@ import { signUpThunk, resetSignUp, googleSignUpThunk } from './actions';
 import Rotate from 'react-reveal/Rotate';
 
 class SignUp extends Component {
-  signUp = (values, authType) => {
-    if (!(values === null)) {
-      this.props.signUpThunk(values);
-    } else {
-      switch (authType) {
-        default:
-          this.props.signUpThunk(values);
-          break;
-        // case 'google':
-        //   console.log('Log in with Google');
-        //   this.props.googleSignUpThunk(values);
-        //   break;
-        // case 'facebook':
-        //   console.log('Log in with Facebook');
-        //   // this.props.faceBookSignUpthunk(values);
-        //   break;
-        // case 'github':
-        //   console.log('Log in with GitHub');
-        //   // this.props.githubSignUpThunk(values);
-        //   break;
-        // default:
-        //   console.warn(`Unhandled authentication type: ${authType}`);
-        //   break;
-      }
+
+  googleSignUp = () => {
+    this.props.googleSignUpThunk('test');
+  }
+
+  signUp = (values, authType = 'default') => {
+    if (!values) {
+      console.warn("No values provided for signUp");
+      return;
+    }
+  
+    switch (authType) {
+      case 'google':
+        this.props.googleSignUpThunk(values);
+        break;
+      // Extend other cases as necessary
+      default:
+        this.props.signUpThunk(values);
+        break;
     }
   };
 
   componentWillUnmount() {
     this.props.resetSignUp();
-    console.log('componentWillMount: this.props.resetSignUp invoked!');
   }
 
   render() {
+
     if (this.props.app.user) {
       return <Redirect to='/board' />;
     };
@@ -67,6 +62,7 @@ class SignUp extends Component {
               <SignUpForm
                 onSubmit={this.signUp}
                 errorMessage={renderError(this.props.signedUp, this.props.app)}
+                googleSignUp={this.googleSignUp}
               />
             </Col>
             <Col />

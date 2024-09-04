@@ -86,6 +86,34 @@ Adding the --trace-deprecation flag didn't work. It's most likely due to a pleth
 
     The social media things need to be implemented for user authentication flow.
 
+18. **Revisit this**
+
+    ```
+    import { selectUpdateJob } from '../../containers/UpdateJob/actions';
+    ```
+    Its located in Tile.js under components
+
+19. **Silly mistake, but remove the semi-colons on all the jsx code**
+
+    ```
+    return (jsx here); <---
+    ```
+
+20. **Silly low priority to remove more semicolons**
+    JS convention should have NO semicolons on function declarations, but it SHOULD have semicolons on function expressions, where expressions are for functions assigned to variables, whereas function declarations are the ones we can think of that get "hoisted".
+
+21. **Revisit a function that could grab too much data from the DB**
+    The actions file for Chart.js should  cause a significant performance bottle neck if the db is large and we grab all DB data from getDBData.
+
+22. **Finish the Google Signup flow**
+    The Google signup thunk is unfinished in the actions.js file and the component itself may need that part commented out for now.
+
+23. **Map Dispatch to Props direct invocation**
+
+    Test whether or not the direct invocation of the mapDispatchToProps function will break if invocation is removed.
+
+24. **Apply newlines at the end of each file**
+    This will help with POSIX standards, compatability with UNIX/Linux tools, avoid concatenation issues, 
 
 # For Me
 

@@ -29,7 +29,6 @@ class UpdateJob extends Component {
   render() {
     if (this.props.updateJob.status || !this.props.updateJob.job) {
       this.props.resetUpdateJob();
-      // window.location.pathname="/board";
       return <Redirect to='/board' />
     };
 

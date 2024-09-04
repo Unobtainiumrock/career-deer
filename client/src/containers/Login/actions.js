@@ -17,20 +17,19 @@ export function login(userInfo) {
   // return a fn
   return async (dispatch, getState) => {
     try {
-      userInfo.email = userInfo.email.toLowerCase();
-      const apiResponse = await (logIn(userInfo));
+      const loginInfo = { ...userInfo, email: userInfo.email.toLowerCase() };
+      const apiResponse = await logIn(loginInfo);
       const loginUser = {
         firstName: apiResponse.data.firstName,
         lastName: apiResponse.data.lastName,
-        email: apiResponse.data.email
       }
       // dispatch here
-      dispatch(appLoginUpdate(loginUser))
+      dispatch(appLoginUpdate(loginUser));
       dispatch(signedIn());
     } catch (err) {
       // and here
-      dispatch(failedSignIn(err));
-    };
+      dispatch(failedSignIn(err.message || 'Login failed'));
+    }
   };
 };
 

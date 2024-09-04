@@ -1,29 +1,36 @@
 import { resetPW } from '../../utils/API';
 
 export const PASSWORD_RESET = 'PASSWORD_RESET';
-export const NO_DATA = 'NO_DATA'; // Determine if this is even useful/meaningful. Chart out the typical user-flow for password resetting.
+export const RESET_PASSWORD_RESET = 'RESET_PASSWORD_RESET';
 
-export function postResetPassword(email) {
+export function postResetPassword(userInfo) {
     return async (dispatch, getState) => {
         try {
-            console.log("entered pwReset")
-
-            const response = await resetPW({ email });
-            
-            dispatch(resetConfirmed(response.data));
+            userInfo.email = userInfo.email.toLowerCase();
+            await(resetPW(userInfo));
+            dispatch(resetConfirmed('ok'));
         } catch(err){
             dispatch(noData(err))
         }
     }
 }
 
-function resetConfirmed(email){
-    console.log('entered resetConfirmed function');
+export function resetPasswordReset() {
+    return {
+        type: RESET_PASSWORD_RESET,
+        payload: {
+            status: false,
+            error: null
+        }
+    }
+}
+
+function resetConfirmed(){
     return {
         type: PASSWORD_RESET,
         payload: {
-            email: email,
-            pwReset: true
+            status: true,
+            error: null
         }
     }
 }
@@ -31,9 +38,9 @@ function resetConfirmed(email){
 function noData(err){
     console.log("error - no data")
     return {
-        type: NO_DATA,
+        type: 'NO_DATA',
         payload: {
-            pwReset : null,
+            status : null,
             error: err
         }
     }

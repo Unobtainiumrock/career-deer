@@ -20,7 +20,7 @@ export function getChartAllData() {
   }
 }
 
-//Get all database info and return as an array.
+//Get all database info and return as an array. <--- Seriously consider removing this. It could potentially cause an insane bottle neck on load times..
 function getDBData() {
   const dataAll = aggregateJobDataForCharts();
   const dataUser = getJobDataUser();

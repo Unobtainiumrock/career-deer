@@ -4,8 +4,6 @@ import { Field, reduxForm, reset } from 'redux-form';
 import { TextField } from 'redux-form-material-ui';
 import { validate } from './validate';
 import Button from '@material-ui/core/Button';
-// import { googleSignIn } from '../../utils/API';
-
 
 const FormStyle = {
   background: '#fff',
@@ -52,7 +50,6 @@ let LoginForm = ({ handleSubmit, pristine, submitting, errorMessage, auth }) => 
     </form>
   )
 };
-
 
 LoginForm = reduxForm({
   // a unique name for the form
