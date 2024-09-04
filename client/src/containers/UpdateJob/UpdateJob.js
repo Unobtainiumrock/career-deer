@@ -33,9 +33,8 @@ class UpdateJob extends Component {
       return <Redirect to='/board' />
     };
 
-    if (!this.cookies.get("email")){
-      window.location.pathname="/unauthorized";
-      return null;
+    if (!this.props.app.user){
+      return <Redirect to='/unauthorized' />
     };
 
     return (
