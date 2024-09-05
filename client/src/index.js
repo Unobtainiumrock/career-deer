@@ -4,7 +4,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import registerServiceWorker from './registerServiceWorker';
 // This wraps our Main app component to give access to material-ui stuff
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+// import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import MuiThemeProvider from '@material-ui/core/styles';
 // This gives our app access to the store
 import { Provider } from 'react-redux';
 
