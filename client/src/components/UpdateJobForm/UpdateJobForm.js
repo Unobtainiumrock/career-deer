@@ -150,10 +150,9 @@ const FormStyle = {
   padding: '10px',
   boxShadow: '0px 0px 1px #5B5B5B'
 };
-
-const UpdateJobForm = ({ deleteJob, errorMessage }) => {
+const UpdateJobForm = ({ onSubmit, deleteJob, errorMessage, initialValues }) => {
   const { control, handleSubmit, formState: { errors, isSubmitting } } = useForm({
-    defaultValues: {
+    defaultValues: initialValues || {
       title: '',
       company_name: '',
       location: '',
@@ -161,22 +160,24 @@ const UpdateJobForm = ({ deleteJob, errorMessage }) => {
       post_date: '',
       notes: [{ content: '' }]
     },
+    mode: 'onChange',
     resolver: async (data, context) => {
       return validate(data) || { values: data, errors: {} };
     }
   });
+
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: "notes"
   });
 
-  const onSubmit = data => {
-    console.log(data);
+  const onSubmitForm = data => {
+    onSubmit(data); // May need more custom functionality like SignUp did.
   };
 
   return (
-    <form style={FormStyle} onSubmit={handleSubmit(onSubmit)}>
+    <form style={FormStyle} onSubmit={handleSubmit(onSubmitForm)}>
       <Row className="justify-content-center">
         <Col size="12 md-12 lg-6">
           <Controller
@@ -252,6 +253,11 @@ const UpdateJobForm = ({ deleteJob, errorMessage }) => {
           <Tooltip title="Save changes" placement="left">
             <IconButton type="submit" disabled={isSubmitting} className="save-btn">
               <i className="fas fa-save"></i>
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Delete Job" placement="left">
+            <IconButton onClick={deleteJob} disabled={isSubmitting} className="delete-btn">
+              <i className="fas fa-trash"></i>
             </IconButton>
           </Tooltip>
         </Col>

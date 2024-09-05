@@ -9,31 +9,21 @@ import { signUpThunk, resetSignUp, googleSignUpThunk } from './actions';
 import Rotate from 'react-reveal/Rotate';
 
 class SignUp extends Component {
-
-  googleSignUp = () => {
-    this.props.googleSignUpThunk('test');
+  componentWillUnmount() {
+    this.props.resetSignUp();
   }
 
-  signUp = (values, authType = 'default') => {
-    if (!values) {
-      console.warn("No values provided for signUp");
-      return;
-    }
-  
+  handleSubmit = (values, authType = 'default') => {
+    // Handle different types of sign-up based on the authType parameter
     switch (authType) {
       case 'google':
         this.props.googleSignUpThunk(values);
         break;
-      // Extend other cases as necessary
       default:
         this.props.signUpThunk(values);
         break;
     }
   };
-
-  componentWillUnmount() {
-    this.props.resetSignUp();
-  }
 
   render() {
 
@@ -42,7 +32,6 @@ class SignUp extends Component {
     };
 
     return (
-      <React.Fragment>
         <Container className="pt-5 pb-5">
           <Row className="justify-content-center">
             <Col size="12 md-6 lg-4">
@@ -60,35 +49,37 @@ class SignUp extends Component {
             <Col />
             <Col size="12 md-8 lg-8" className="banana">
               <SignUpForm
-                onSubmit={this.signUp}
-                errorMessage={renderError(this.props.signedUp, this.props.app)}
-                googleSignUp={this.googleSignUp}
+                onSubmit={this.handleSubmit}
+                errorMessage={renderError(this.props.signedUp)}
               />
             </Col>
             <Col />
           </Row>
         </Container>
-        {/* <div>{this.props.renderMaterial}</div> */}
-      </React.Fragment>
     );
   };
 };
 
-const renderError = (signedUpState, appState) => {
-  if (!appState.user && signedUpState.error?.response?.data) {
-    const { name, code } = signedUpState.error.response.data;
-    
-    if (name === "MissingFirstNameError") 
-      return "You must enter a first name.";
-    if (name === "MissingLastNameError") 
-      return "You must enter a last name.";
-    if (name === "MissingEmailError") 
-      return "You must enter an email.";
-    if (name === "MissingPasswordError") 
-      return "You must enter a password.";
-    if (code === 11000) 
-      return "An account with that email already exists. Please choose another email.";
+const renderError = (signedUpState) => {
+  if (signedUpState.error) {
+    const { response } = signedUpState.error;
+    if (response && response.data) {
+      const { name, code } = response.data;
+      
+      switch (name) {
+        case "MissingFirstNameError": return "You must enter a first name.";
+        case "MissingLastNameError": return "You must enter a last name.";
+        case "MissingEmailError": return "You must enter an email.";
+        case "MissingPasswordError": return "You must enter a password.";
+        default: break;
+      }
+      if (code === 11000) {
+        return "An account with that email already exists. Please choose another email.";
+      }
+    }
+    return "An unexpected error occurred.";
   }
+  return ""; // Return an empty string if no error.
 };
 
 

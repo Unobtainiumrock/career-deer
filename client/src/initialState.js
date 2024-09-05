@@ -30,7 +30,8 @@ export default {
   searchData: {
     loading: false,
     data: [],
-    saved: []
+    saved: [],
+    error: null
   },
   chartData: {
     sample: {

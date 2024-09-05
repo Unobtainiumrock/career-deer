@@ -101,7 +101,7 @@ const FormStyle = {
   boxShadow: '0px 0px 1px #5B5B5B'
 };
 
-const SignUpForm = ({ errorMessage }) => {
+const SignUpForm = ({ onSubmit, errorMessage }) => {
   const { control, handleSubmit, formState: { errors, isSubmitting } } = useForm({
     defaultValues: {
       firstName: '',
@@ -116,102 +116,34 @@ const SignUpForm = ({ errorMessage }) => {
     }
   });
 
-  const onSubmit = data => {
-    console.log(data);
+  const onSubmitForm = (data, event) => {
+    const isGoogleSignUp = event.target.name === 'googleSignUp';
+    onSubmit(data, isGoogleSignUp ? 'google' : 'default');
   };
 
   return (
-    <form style={FormStyle} onSubmit={handleSubmit(onSubmit)}>
+    <form style={FormStyle} onSubmit={handleSubmit(onSubmitForm)}>
       <Row className="justify-content-center">
-        <Col size="12 md-12 lg-6">
-          <Controller
-            name="firstName"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="First Name"
-                variant="outlined"
-                fullWidth
-                error={Boolean(errors.firstName)}
-                helperText={errors.firstName && errors.firstName.message}
-              />
-            )}
-          />
-        </Col>
-        <Col size="12 md-12 lg-6">
-          <Controller
-            name="lastName"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="Last Name"
-                variant="outlined"
-                fullWidth
-                error={Boolean(errors.lastName)}
-                helperText={errors.lastName && errors.lastName.message}
-              />
-            )}
-          />
-        </Col>
-      </Row>
-      <Row className="justify-content-center">
-        <Col size="12 md-12">
-          <Controller
-            name="email"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                type="email"
-                label="Email"
-                variant="outlined"
-                fullWidth
-                error={Boolean(errors.email)}
-                helperText={errors.email && errors.email.message}
-              />
-            )}
-          />
-        </Col>
-      </Row>
-      <Row className="justify-content-center">
-        <Col size="12 md-12">
-          <Controller
-            name="password"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                type="password"
-                label="Password"
-                variant="outlined"
-                fullWidth
-                error={Boolean(errors.password)}
-                helperText={errors.password && errors.password.message}
-              />
-            )}
-          />
-        </Col>
-      </Row>
-      <Row className="justify-content-center">
-        <Col size="12 md-12">
-          <Controller
-            name="passwordRepeat"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                type="password"
-                label="Enter your password again"
-                variant="outlined"
-                fullWidth
-                error={Boolean(errors.passwordRepeat)}
-                helperText={errors.passwordRepeat && errors.passwordRepeat.message}
-              />
-            )}
-          />
-        </Col>
+        {['firstName', 'lastName', 'email', 'password', 'passwordRepeat'].map(field => (
+          <Col key={field} size="12 md-12 lg-6">
+            <Controller
+              name={field}
+              control={control}
+              rules={{ required: `${field} is required` }} // Basic validation
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  label={field.charAt(0).toUpperCase() + field.slice(1).replace('Repeat', ' Again')}
+                  type={field.includes('password') ? 'password' : 'text'}
+                  variant="outlined"
+                  fullWidth
+                  error={!!error}
+                  helperText={error ? error.message : null}
+                />
+              )}
+            />
+          </Col>
+        ))}
       </Row>
       <Row className="justify-content-end">
         <Col size="12">
@@ -225,10 +157,13 @@ const SignUpForm = ({ errorMessage }) => {
           <Button variant="contained" color="primary" className="btn btn-info" type="submit" disabled={isSubmitting}>
             Sign Up
           </Button>
+          <Button variant="contained" color="secondary" className="ml-2" name="googleSignUp" onClick={handleSubmit(onSubmitForm)} disabled={isSubmitting}>
+            Sign Up with Google
+          </Button>
         </Col>
       </Row>
     </form>
-  );
+  )
 };
 
 export default SignUpForm;

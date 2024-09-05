@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 import SearchForm from '../../components/SearchForm';
 import SearchResults from '../../components/SearchResults';
@@ -10,7 +11,7 @@ import { connect } from 'react-redux';
 import { getSearchJobs, postSaveJob, getAllSavedJobs } from './actions';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
-import Bounce from 'react-reveal/Bounce';
+// import Bounce from 'react-reveal/Bounce';
 
 const huntStyle = {
   display: 'block',
@@ -68,26 +69,24 @@ class Search extends Component {
       <Container className="pt-5">
         <Row className="justify-content-center">
           <Col size="12 md-12 lg-5">
-          <Bounce>
-          <img style={huntStyle} src="/imgs/icons/hunt.svg" alt="hunt the deer"/>
-          </Bounce>
+            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring' }}>
+              <img style={huntStyle} src="/imgs/icons/hunt.svg" alt="hunt the deer" />
+            </motion.div>
           </Col>
-          <SearchForm onSubmit={this.searchJobs} />
+          <SearchForm onSubmitForm={this.searchJobs} errorMessage={this.props.searchData.error} />
         </Row>
-        <br/>
-        {this.props.searchData.loading ? <LinearProgress /> : null}
+        <br />
+        {this.props.searchData.loading && <LinearProgress />}
         <Row className="justify-content-center mt-5">
           <Col size="12 card">
-            {this.props.searchData.data.map((result, i) => {
-              return (
-                <SearchResults
-                  key={i}
-                  results={result}
-                  save={() => this.saveJob(i)}
-                  alreadySaved={this.alreadySaved(i)}
-                />
-              )
-            })}
+            {this.props.searchData.data.map((result, i) => (
+              <SearchResults
+                key={i}
+                results={result}
+                save={() => this.saveJob(i)}
+                alreadySaved={this.alreadySaved(i)}
+              />
+            ))}
           </Col>
         </Row>
       </Container>
@@ -110,4 +109,3 @@ const mapDispatchToProps = (dispatch, props) => ({
 })
 
 export default connect(mapStateToProps, mapDispatchToProps())(Search);
-
