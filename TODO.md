@@ -118,6 +118,15 @@ Adding the --trace-deprecation flag didn't work. It's most likely due to a pleth
 25. **Investigate switching over to pnpm**
     Its apparently a blazingly fast package manager and I want to get away from yarn if it somehow helps meta become more dominant.
 
+26. **Clean up Redux State**
+    Clean up the Redux state and initial state for error handling. Start with the react forms that were newly added.
+
+27. **Add back in react-router-dom**
+    If its compatible with current React, then add it back in. Otherwise, look for a new tool to get similar behavior.
+
+28. **Test all Edge Cases for the various forms**
+    Determine if proper error messaging is implemented.
+
 # For Me
 
 I need to incorproate my following sentiment somewhere into why I am reviving Career Deer:
