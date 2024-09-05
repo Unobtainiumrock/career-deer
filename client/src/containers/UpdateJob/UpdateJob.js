@@ -3,10 +3,10 @@ import { Redirect } from "react-router-dom";
 import UpdateJobForm from '../../components/UpdateJobForm/UpdateJobForm';
 import { Container, Col, Row } from '../../components/Grid';
 import { connect } from 'react-redux';
-import { executeDeleteJob, executeUpdateJob, resetUpdateJob, selectUpdateJob } from './actions';
-import { grabJobs } from '../Board/actions';
+import { executeDeleteJob, executeUpdateJob, resetUpdateJob, /*selectUpdateJob*/ } from './actions';
+// import { grabJobs } from '../Board/actions';
 
-const UpdateJob = ({ updateJob, app, executeUpdateJob, executeDeleteJob, resetUpdateJob, initialValues }) => {
+const UpdateJob = ({ updateJob, app, executeUpdateJob, executeDeleteJob, resetUpdateJob, /*initialValues*/ }) => {
   useEffect(() => {
     if (!updateJob.job) {
       resetUpdateJob();
