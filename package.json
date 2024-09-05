@@ -4,7 +4,7 @@
   "description": "Job Task Tracker - Backend",
   "main": "./backend/server",
   "scripts": {
-    "start": "if-env NODE_ENV=production && yarn start:prod || yarn start:dev",
+    "start": "cross-env NODE_ENV=production yarn start:prod || yarn start:dev",
     "start:prod": "node ./backend/server",
     "start:dev": "concurrently \"yarn nodemon --trace-deprecation --ignore 'client/*'\" \"yarn client\"",
     "client": "cd client && yarn start",

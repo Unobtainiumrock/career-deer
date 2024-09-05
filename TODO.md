@@ -113,7 +113,10 @@ Adding the --trace-deprecation flag didn't work. It's most likely due to a pleth
     Test whether or not the direct invocation of the mapDispatchToProps function will break if invocation is removed.
 
 24. **Apply newlines at the end of each file**
-    This will help with POSIX standards, compatability with UNIX/Linux tools, avoid concatenation issues, 
+    This will help with POSIX standards, compatability with UNIX/Linux tools, avoid concatenation issues.
+
+25. **Investigate switching over to pnpm**
+    Its apparently a blazingly fast package manager and I want to get away from yarn if it somehow helps meta become more dominant.
 
 # For Me
 
