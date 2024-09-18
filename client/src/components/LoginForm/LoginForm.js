@@ -1,9 +1,8 @@
 import React from 'react';
-// Redux stuff
-import { Field, reduxForm, reset } from 'redux-form';
-import { TextField } from 'redux-form-material-ui';
+import { useForm, Controller } from 'react-hook-form';
+import { TextField, Button, Box, Typography } from '@mui/material';
 import { validate } from './validate';
-import Button from '@material-ui/core/Button';
+
 
 const FormStyle = {
   background: '#fff',
@@ -11,6 +10,15 @@ const FormStyle = {
   padding: '15px',
   boxShadow: '0px 0px 1px #5B5B5B'
 }
+
+// const LoginForm = ({ dispatch }) => {
+//   const { control, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm({
+//     defaultValues: {
+//       email: '',
+//       password: ''
+//     },
+//     mode: 'onChange'
+//   });
 
 const renderTextField = ({
   input,

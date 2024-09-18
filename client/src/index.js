@@ -3,9 +3,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import registerServiceWorker from './registerServiceWorker';
-// This wraps our Main app component to give access to material-ui stuff
-// import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import MuiThemeProvider from '@material-ui/core/styles';
+// Updated import for the ThemeProvider and theme creation function
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 // This gives our app access to the store
 import { Provider } from 'react-redux';
 
@@ -25,12 +24,22 @@ import initialState from './initialState';
 const store = configureStore(initialState);
 const MOUNT_NODE = document.querySelector('#root');
 
+// Create a basic theme
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#556cd6',
+    },
+    // You can add more theme properties here
+  },
+});
+
 ReactDOM.render(
-  <MuiThemeProvider>
+  <ThemeProvider theme={theme}>
     <Provider store={store}>
       <App />
     </Provider>
-  </MuiThemeProvider>,
+  </ThemeProvider>,
   MOUNT_NODE
 );
 

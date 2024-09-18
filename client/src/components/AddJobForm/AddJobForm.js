@@ -1,114 +1,88 @@
 import React from 'react';
-// Redux stuff
-import { Field, reduxForm, reset } from 'redux-form';
-import { TextField } from 'redux-form-material-ui';
+import { useForm, Controller } from 'react-hook-form';
+import { TextField, Button, Grid, Typography } from '@mui/material';
 import { validate, warn } from './validate';
-import { Col, Row } from '../Grid';
-import Button from '@material-ui/core/Button';
 
-
-
-//styling for warning messages
-const styles = {
-  warningStyle: {
-    color: 'rgb(255,204,0)',
-  }
-};
-
-const FormStyle = {
+// Define the form's style
+const formStyle = {
   background: '#fff',
   borderRadius: '15px',
-  boxShadow: '0px 0px 1px #5B5B5B'
-}
-
-const renderTextField = (
-  {
-    input,
-    label,
-    required,
-    dateField,
-    textArea,
-    meta: { touched, error, warning },
-    ...custom
-  }) => (
-    <TextField
-      // don't show the hint text when it's a date because the default date always shows
-      hintText={!dateField && !textArea && label}
-      // add the asterisk to the end of the label if it's a required field
-      floatingLabelText={label + (required ? '*' : '')}
-      // show the label above the date always because we're not showing the hint text
-      floatingLabelFixed={!!dateField}
-      // defines the error/warning text
-      errorText={touched &&
-        ((error && <span>{error}</span>) ||
-        (warning && <span>{warning}</span>))}
-      // changes the color of the text to yellow from red when it's a warning and not an error
-      errorStyle={(warning && !error) ? styles.warningStyle : {}}
-      // determines whether it's going to be a text box
-      multiLine={!!textArea}
-      // sets the initial and maximum size of the text box
-      rows={textArea ? 2 : 1}
-      rowsMax={textArea ? 4 : 1}
-      {...input}
-      {...custom}
-    />
-  );
-
-let AddJobForm = ({ handleSubmit, pristine, reset, submitting, errorMessage }) => {
-  return (
-    <form style={FormStyle} onSubmit={handleSubmit}>
-    <Row className="justify-content-center">
-      <Col size="12 md-12 lg-5">
-        <Field className="text-input" name="title" component={renderTextField} type="text" label="Job Title" required></Field>
-      </Col>
-      <Col size="12 md-12 lg-5">
-        <Field className="text-input" name="company_name" component={renderTextField} type="text" label="Company" required></Field>
-      </Col>
-    </Row>
-    <Row className="justify-content-center">
-      <Col size="12 md-12 lg-5">
-        <Field className="text-input" name="url" component={renderTextField} type="text" label="Link URL"></Field>
-      </Col>
-      <Col size="12 md-12 lg-5">
-        <Field className="text-input" name="location" component={renderTextField} type="text" label="Location"></Field>
-      </Col>
-    </Row>
-    <Row className="justify-content-center">
-      <Col size="12 md-12 lg-5">
-        <Field className="text-input" name="post_date" component={renderTextField} type="date" label="Job Post Date" dateField></Field>
-      </Col>
-      <Col size="12 md-12 lg-5">
-      </Col>
-    </Row>
-    <Row className="justify-content-center">
-      <Col size="12 md-12 lg-10">
-        <Field className="text-input" name="note" component={renderTextField} type="text" label="note" textArea></Field>
-      </Col>
-    </Row>
-    <Row className="justify-content-center text-right">
-    <Col size="12 lg-5">
-    </Col>
-      <Col size="12 md-12 lg-5">
-        <h6>{errorMessage}</h6>
-        <Button variant="contained" color="primary" className="btn btn-info my-1" type="submit" disabled={pristine || submitting}>
-          Track It!
-        </Button>
-        <p className="text-right">* indicates a required field.</p>
-      </Col>
-    </Row>
-    </form>
-  )
+  boxShadow: '0px 0px 1px #5B5B5B',
+  padding: '20px'
 };
 
-AddJobForm = reduxForm({
-  // a unique name for the form
-  form: 'addjob',
-  validate,
-  warn,
-  onSubmitSuccess: (result, dispatch) => dispatch(reset('addjob'))
-})(AddJobForm);
+const AddJobForm = ({ onSubmitForm, errorMessage }) => {
+  const { control, handleSubmit, formState: { errors, isSubmitting } } = useForm({
+    defaultValues: {
+      title: '',
+      company_name: '',
+      url: '',
+      location: '',
+      post_date: '',
+      note: ''
+    },
+    mode: 'onTouched',
+    resolver: async (data) => {
+      const validationErrors = validate(data);
+      const warnings = warn(data);
 
-// Inside this file, we wrapped our component inside the imported 'reduxForm' function
-// We can think of reduxForm() from redux-form behaving similar to connect() from react-redux in
-// terms of connecting a component to communicate with the store --Nicholas
+      // Here you would typically handle warnings separately
+      // For example, you could set them as `softErrors` in the state or display them differently
+      // This code snippet just showcases how you might set them up
+      Object.keys(warnings).forEach(key => {
+        if (!validationErrors[key]) {
+          setError(key, { type: "warning", message: warnings[key] });
+        }
+      });
+
+      return { values: data, errors: validationErrors || {} };
+    }
+  });
+
+  const onSubmit = data => {
+    onSubmitForm(data); // Call Redux action provided by the container
+  }
+
+  return (
+    <form style={formStyle} onSubmit={handleSubmit(onSubmit)}>
+      <Grid container spacing={2} justifyContent="center">
+        {['title', 'company_name', 'url', 'location', 'post_date', 'note'].map((field, index) => (
+          <Grid item xs={12} md={6} key={index}>
+            <Controller
+              name={field}
+              control={control}
+              rules={{ required: field + ' is required' }} // Custom messages or logic can be added here
+              render={({ field, fieldState }) => (
+                <TextField
+                  {...field}
+                  label={field.charAt(0).toUpperCase() + field.slice(1).replace('_', ' ')}
+                  fullWidth
+                  required={field === 'title' || field === 'company_name'}
+                  error={!!fieldState.error}
+                  helperText={fieldState.error ? fieldState.error.message : null}
+                  multiline={field === 'note'}
+                  rows={field === 'note' ? 2 : 1}
+                  type={field === 'post_date' ? 'date' : 'text'}
+                  InputLabelProps={field === 'post_date' ? { shrink: true } : undefined}
+                />
+              )}
+            />
+          </Grid>
+        ))}
+        <Grid item xs={12}>
+          <Typography color="error">{errorMessage}</Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            disabled={isSubmitting}
+          >
+            Track It!
+          </Button>
+        </Grid>
+      </Grid>
+    </form>
+  );
+};
+
 export default AddJobForm;

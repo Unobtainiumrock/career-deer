@@ -131,6 +131,10 @@ Adding the --trace-deprecation flag didn't work. It's most likely due to a pleth
     Determine whether or not the container-functional component paradigm still holds or how it changes if we make every component a function.
     if converted over to functional components that use newer React features, to what extent will Redux play a role in going forward?
 
+```
+warning " > chartjs-plugin-datalabels@0.3.0" has incorrect peer dependency "chart.js@>= 2.7.0 < 3".
+```
+
 # For Me
 
 I need to incorproate my following sentiment somewhere into why I am reviving Career Deer:
