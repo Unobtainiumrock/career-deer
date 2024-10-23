@@ -15,13 +15,11 @@ import updateJobReducer from './containers/UpdateJob/reducer';
 import viewJobsReducer from './containers/ViewJobs/reducer';
 import burgerMenuReducer from './containers/BurgerMenu/reducer';
 import searchReducer from './containers/Search/reducer';
-
-// If you're still using redux-form, import its reducer
-import { reducer as formReducer } from 'redux-form';
+// import { reducer as formReducer } from 'redux-form';
 
 const rootReducer = combineReducers({
   app: appReducer,
-  form: formReducer, // Note: redux-form is deprecated; consider migrating in the future
+  // form: formReducer,
   loggedIn: loginReducer,
   signedUp: signUpReducer,
   pwReset: pwResetReducer,

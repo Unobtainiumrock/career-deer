@@ -1,4 +1,5 @@
-const axios = require('axios');
+// const axios = require('axios');
+import axios from 'axios';
 
 // Consider breaking apart the auth and jobs endpoints into separate API's.
 
@@ -6,7 +7,7 @@ const axios = require('axios');
 // ======================================================
 
 export function initialLoad() {
-  return axios.get('api/auth/load');
+  return axios.get('/api/auth/load');
 }
 
 export function signUp(data) {
