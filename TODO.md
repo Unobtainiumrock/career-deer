@@ -131,8 +131,17 @@ Adding the --trace-deprecation flag didn't work. It's most likely due to a pleth
     Determine whether or not the container-functional component paradigm still holds or how it changes if we make every component a function.
     if converted over to functional components that use newer React features, to what extent will Redux play a role in going forward?
 
+30. **Resolve all the warnings upon yarn start:dev**
+    Self-explanatory.
+
 ```
 warning " > chartjs-plugin-datalabels@0.3.0" has incorrect peer dependency "chart.js@>= 2.7.0 < 3".
+
+31. **Running list of imports that need to be updated**
+    Many imports from old npm packages need to be updated to more modern versions:
+        - react-awesome-reveal: This will replace react-reveal. `import Tada from 'react-reveal/Tada'` and `import Fade from 'react-reveal/Tada'` can be `import { Tada, Fase } from 'react-awesome-reveal'` and then the component usage in the code must be changed.
+
+        - @hello-pangea/dnd: This will replace replace `react-beautifl-dnd`. Instead of `import { DragDropContext } from 'react-beautiful-dnd'`, we can instead do `import { DragDropContext } from '@hello-pangea/dnd'` and need to further test what parts of the application break.
 ```
 
 # For Me
