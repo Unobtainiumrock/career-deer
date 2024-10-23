@@ -87,9 +87,90 @@
 
 // export default SignUpForm
 
+// import React from 'react';
+// import { useForm, Controller } from 'react-hook-form';
+// import { TextField, Button } from '@material-ui/core';
+// import { Col, Row } from '../Grid';
+// import { validate } from './validate';
+
+// const FormStyle = {
+//   background: '#fff',
+//   borderRadius: '15px',
+//   marginTop: '10px',
+//   padding: '10px',
+//   boxShadow: '0px 0px 1px #5B5B5B'
+// };
+
+// const SignUpForm = ({ onSubmit, errorMessage }) => {
+//   const { control, handleSubmit, formState: { errors, isSubmitting } } = useForm({
+//     defaultValues: {
+//       firstName: '',
+//       lastName: '',
+//       email: '',
+//       password: '',
+//       passwordRepeat: ''
+//     },
+//     mode: 'onChange',
+//     resolver: async (data, context) => {
+//       return validate(data) || { values: data, errors: {} };
+//     }
+//   });
+
+//   const onSubmitForm = (data, event) => {
+//     const isGoogleSignUp = event.target.name === 'googleSignUp';
+//     onSubmit(data, isGoogleSignUp ? 'google' : 'default');
+//   };
+
+//   return (
+//     <form style={FormStyle} onSubmit={handleSubmit(onSubmitForm)}>
+//       <Row className="justify-content-center">
+//         {['firstName', 'lastName', 'email', 'password', 'passwordRepeat'].map(field => (
+//           <Col key={field} size="12 md-12 lg-6">
+//             <Controller
+//               name={field}
+//               control={control}
+//               rules={{ required: `${field} is required` }} // Basic validation
+//               render={({ field, fieldState: { error } }) => (
+//                 <TextField
+//                   {...field}
+//                   label={field.charAt(0).toUpperCase() + field.slice(1).replace('Repeat', ' Again')}
+//                   type={field.includes('password') ? 'password' : 'text'}
+//                   variant="outlined"
+//                   fullWidth
+//                   error={!!error}
+//                   helperText={error ? error.message : null}
+//                 />
+//               )}
+//             />
+//           </Col>
+//         ))}
+//       </Row>
+//       <Row className="justify-content-end">
+//         <Col size="12">
+//           <h6>{errorMessage}</h6>
+//         </Col>
+//       </Row>
+//       <Row className="justify-content-end">
+//         <Col size="12 lg-6">
+//         </Col>
+//         <Col size="10 md-10 lg-6" className="text-right">
+//           <Button variant="contained" color="primary" className="btn btn-info" type="submit" disabled={isSubmitting}>
+//             Sign Up
+//           </Button>
+//           <Button variant="contained" color="secondary" className="ml-2" name="googleSignUp" onClick={handleSubmit(onSubmitForm)} disabled={isSubmitting}>
+//             Sign Up with Google
+//           </Button>
+//         </Col>
+//       </Row>
+//     </form>
+//   )
+// };
+
+// export default SignUpForm;
+
 import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { TextField, Button } from '@material-ui/core';
+import { TextField, Button } from '@mui/material'; // Updated import
 import { Col, Row } from '../Grid';
 import { validate } from './validate';
 
@@ -98,22 +179,26 @@ const FormStyle = {
   borderRadius: '15px',
   marginTop: '10px',
   padding: '10px',
-  boxShadow: '0px 0px 1px #5B5B5B'
+  boxShadow: '0px 0px 1px #5B5B5B',
 };
 
 const SignUpForm = ({ onSubmit, errorMessage }) => {
-  const { control, handleSubmit, formState: { errors, isSubmitting } } = useForm({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
     defaultValues: {
       firstName: '',
       lastName: '',
       email: '',
       password: '',
-      passwordRepeat: ''
+      passwordRepeat: '',
     },
     mode: 'onChange',
-    resolver: async (data, context) => {
+    resolver: async (data) => {
       return validate(data) || { values: data, errors: {} };
-    }
+    },
   });
 
   const onSubmitForm = (data, event) => {
@@ -124,17 +209,20 @@ const SignUpForm = ({ onSubmit, errorMessage }) => {
   return (
     <form style={FormStyle} onSubmit={handleSubmit(onSubmitForm)}>
       <Row className="justify-content-center">
-        {['firstName', 'lastName', 'email', 'password', 'passwordRepeat'].map(field => (
-          <Col key={field} size="12 md-12 lg-6">
+        {['firstName', 'lastName', 'email', 'password', 'passwordRepeat'].map((fieldName) => (
+          <Col key={fieldName} size="12 md-12 lg-6">
             <Controller
-              name={field}
+              name={fieldName}
               control={control}
-              rules={{ required: `${field} is required` }} // Basic validation
+              rules={{ required: `${fieldName} is required` }} // Basic validation
               render={({ field, fieldState: { error } }) => (
                 <TextField
                   {...field}
-                  label={field.charAt(0).toUpperCase() + field.slice(1).replace('Repeat', ' Again')}
-                  type={field.includes('password') ? 'password' : 'text'}
+                  label={
+                    fieldName.charAt(0).toUpperCase() +
+                    fieldName.slice(1).replace('Repeat', ' Again')
+                  }
+                  type={fieldName.includes('password') ? 'password' : 'text'}
                   variant="outlined"
                   fullWidth
                   error={!!error}
@@ -151,19 +239,31 @@ const SignUpForm = ({ onSubmit, errorMessage }) => {
         </Col>
       </Row>
       <Row className="justify-content-end">
-        <Col size="12 lg-6">
-        </Col>
+        <Col size="12 lg-6"></Col>
         <Col size="10 md-10 lg-6" className="text-right">
-          <Button variant="contained" color="primary" className="btn btn-info" type="submit" disabled={isSubmitting}>
+          <Button
+            variant="contained"
+            color="primary"
+            className="btn btn-info"
+            type="submit"
+            disabled={isSubmitting}
+          >
             Sign Up
           </Button>
-          <Button variant="contained" color="secondary" className="ml-2" name="googleSignUp" onClick={handleSubmit(onSubmitForm)} disabled={isSubmitting}>
+          <Button
+            variant="contained"
+            color="secondary"
+            className="ml-2"
+            name="googleSignUp"
+            onClick={handleSubmit(onSubmitForm)}
+            disabled={isSubmitting}
+          >
             Sign Up with Google
           </Button>
         </Col>
       </Row>
     </form>
-  )
+  );
 };
 
 export default SignUpForm;
