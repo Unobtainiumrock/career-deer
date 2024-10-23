@@ -360,9 +360,110 @@
 
 // export default connect(mapStateToProps, mapDispatchToProps())(Chart);
 
+// import React, { Component } from 'react';
+// import { connect } from 'react-redux';
+// import { Redirect } from 'react-router-dom';
+// import { Bar, Line, Doughnut } from 'react-chartjs-2';
+// import { getChartAllData } from './actions';
+// import { Col, Row, Container } from '../../components/Grid';
+
+// import './Chart.css';
+// import { AttentionSeeker } from 'react-awesome-reveal'; // Updated import
+
+// class Chart extends Component {
+//   componentDidMount() {
+//     this.props.getChartAllData();
+//   }
+
+//   render() {
+//     if (!this.props.app.user) {
+//       return <Redirect to="/unauthorized" />;
+//     }
+
+//     return (
+//       <Container className="pt-5">
+//         <Row className="justify-content-center">
+//           <Col size="12 md-12 lg-4" className="mt-5 pt-5">
+//             <AttentionSeeker effect="tada">
+//               <img src="/imgs/icons/charts.svg" alt="deer chart" />
+//             </AttentionSeeker>
+//           </Col>
+//           <Col size="12 md-12 lg-8" className="pt-5 mx-auto d-flex flex-wrap">
+//             <h1 className="montserrat text-center font-weight-bold w-100">
+//               Your Activity Dashboard
+//             </h1>
+//             <div className="chart mx-auto mb-5">
+//               <Line
+//                 data={{
+//                   labels: this.props.chartData.all.labels || [],
+//                   datasets: [
+//                     {
+//                       label: 'User',
+//                       fill: false,
+//                       data: this.props.chartData.user.percentage || [],
+//                       backgroundColor: ['rgba(0,255,0, 0.7)'],
+//                     },
+//                   ],
+//                 }}
+//                 options={{
+//                   scales: {
+//                     yAxes: [
+//                       {
+//                         scaleLabel: {
+//                           display: true,
+//                         },
+//                         ticks: {
+//                           beginAtZero: true,
+//                           callback: (value) => {
+//                             return value + '%';
+//                           },
+//                         },
+//                       },
+//                     ],
+//                   },
+//                   title: {
+//                     display: true,
+//                     text:
+//                       'General Progress (%)' +
+//                       (this.props.chartData.sample?.title || ''),
+//                     fontSize: 20,
+//                   },
+//                   legend: {
+//                     display: true,
+//                     position: 'right',
+//                   },
+//                   maintainAspectRatio: false,
+//                 }}
+//               />
+//             </div>
+//           </Col>
+//         </Row>
+
+//         {/* Rest of the component remains the same */}
+
+//         {/* ... Include the rest of your component code here ... */}
+
+//       </Container>
+//     );
+//   }
+// }
+
+// function mapStateToProps(state) {
+//   return {
+//     chartData: state.chartData,
+//     app: state.app,
+//   };
+// }
+
+// const mapDispatchToProps = {
+//   getChartAllData,
+// };
+
+// export default connect(mapStateToProps, mapDispatchToProps)(Chart);
+
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { Bar, Line, Doughnut } from 'react-chartjs-2';
 import { getChartAllData } from './actions';
 import { Col, Row, Container } from '../../components/Grid';
@@ -377,7 +478,7 @@ class Chart extends Component {
 
   render() {
     if (!this.props.app.user) {
-      return <Redirect to="/unauthorized" />;
+      return <Navigate to="/unauthorized" replace />;
     }
 
     return (
@@ -407,30 +508,27 @@ class Chart extends Component {
                 }}
                 options={{
                   scales: {
-                    yAxes: [
-                      {
-                        scaleLabel: {
-                          display: true,
-                        },
-                        ticks: {
-                          beginAtZero: true,
-                          callback: (value) => {
-                            return value + '%';
-                          },
-                        },
+                    y: {
+                      beginAtZero: true,
+                      ticks: {
+                        callback: (value) => `${value}%`,
                       },
-                    ],
+                    },
                   },
-                  title: {
-                    display: true,
-                    text:
-                      'General Progress (%)' +
-                      (this.props.chartData.sample?.title || ''),
-                    fontSize: 20,
-                  },
-                  legend: {
-                    display: true,
-                    position: 'right',
+                  plugins: {
+                    title: {
+                      display: true,
+                      text:
+                        'General Progress (%)' +
+                        (this.props.chartData.sample?.title || ''),
+                      font: {
+                        size: 20,
+                      },
+                    },
+                    legend: {
+                      display: true,
+                      position: 'right',
+                    },
                   },
                   maintainAspectRatio: false,
                 }}
@@ -438,8 +536,6 @@ class Chart extends Component {
             </div>
           </Col>
         </Row>
-
-        {/* Rest of the component remains the same */}
 
         {/* ... Include the rest of your component code here ... */}
 

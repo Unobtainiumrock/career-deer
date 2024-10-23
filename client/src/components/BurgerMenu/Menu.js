@@ -1,6 +1,6 @@
-import {elastic as Menu} from 'react-burger-menu';
-import {decorator as reduxBurgerMenu} from 'redux-burger-menu';
+// import {elastic as Menu} from 'react-burger-menu';
+// import {decorator as reduxBurgerMenu} from 'redux-burger-menu';
 
-const ReduxBurgerMenu = reduxBurgerMenu(Menu);
+// const ReduxBurgerMenu = reduxBurgerMenu(Menu);
 
-export default ReduxBurgerMenu;
+// export default ReduxBurgerMenu;

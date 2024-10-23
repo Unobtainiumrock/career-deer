@@ -1,11 +1,11 @@
-import { updatepW } from '../../utils/API';
+import { updatePW } from '../../utils/API';
 
 export const PASSWORD_UPDATE = 'PASSWORD_UPDATE';
 
 export function updatePassword(userInfo) {
     return async (dispatch, getState) => {
         try {
-            await(updatepW(userInfo));
+            await(updatePW(userInfo));
             dispatch(resetConfirmed('ok'));
         } catch(err){
             dispatch(noData(err))

@@ -1,25 +1,25 @@
 import React, { Component } from 'react';
 import './App.css';
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import { Cookies } from 'react-cookie';
 
-import { Nav } from "../../components/Nav";
-import Home from "../Home/Home";
-import LoginPage from "../Login/LoginPage";
-import NoMatch from "../NoMatch/NoMatch";
-import SignUp from "../SignUp/SignUp";
-import AddJob from "../AddJob/AddJob";
+import { Nav } from '../../components/Nav';
+import Home from '../Home/Home';
+import LoginPage from '../Login/LoginPage';
+import NoMatch from '../NoMatch/NoMatch';
+import SignUp from '../SignUp/SignUp';
+import AddJob from '../AddJob/AddJob';
 import UpdateJob from '../UpdateJob/UpdateJob';
 import ViewJobs from '../ViewJobs/ViewJobs';
 import Chart from '../Chart/Chart';
 import Search from '../Search/Search';
 import Board from '../Board/Board';
 import BurgerMenu from '../../components/BurgerMenu/BurgerMenu';
-import Loading from "../../components/Loading/Loading";
+import Loading from '../../components/Loading/Loading';
 
 import ResetPW from '../ResetPW/ResetPW';
-
+import UpdatePW from '../UpdatePW/UpdatePW';
 
 // Redux stuff
 import { connect } from 'react-redux';
@@ -28,13 +28,13 @@ import { appLoginUpdate, appLogoutUpdate, appInitialLoad } from './actions';
 class App extends Component {
   // cookies = new Cookies()
 
-  loginAction = user => {
+  loginAction = (user) => {
     this.props.appLoginUpdate(user);
-  }
+  };
 
   logoutAction = () => {
     this.props.appLogoutUpdate();
-  }
+  };
 
   componentDidMount() {
     this.props.appInitialLoad();
@@ -46,13 +46,15 @@ class App extends Component {
     }
 
     if (this.props.app.user) {
-      return (<BurgerMenu
-        firstName={this.props.app.user ? this.props.app.user.firstName : "Stray"}
-        lastName={this.props.app.user ? this.props.app.user.lastName: "Deer"}
-        logoutAction={this.logoutAction} />
-      )
+      return (
+        <BurgerMenu
+          firstName={this.props.app.user ? this.props.app.user.firstName : 'Stray'}
+          lastName={this.props.app.user ? this.props.app.user.lastName : 'Deer'}
+          logoutAction={this.logoutAction}
+        />
+      );
     } else {
-      return (<Nav />)
+      return <Nav />;
     }
   }
 
@@ -62,21 +64,22 @@ class App extends Component {
         <div id="outer-container">
           {this.selectNav()}
           <main id="page-wrap">
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route exact path="/login" component={LoginPage} />
-            <Route exact path="/signup" component={SignUp} />
-            <Route exact path="/chart" component={Chart} />
-            <Route exact path="/addjob" component={AddJob} />
-            <Route exact path="/search" component={Search} />
-            <Route exact path="/board" component={Board} />
-            <Route exact path="/updatejob" component={UpdateJob} />
-            {/* <Route exact path ="/viewjobs" component={ViewJobs} /> */}
-            <Route exact path ="/forgotpw" component={ResetPW} />
-            <Route path ="/updatepw" component={UpdatePW} />
-            <Route exact path ="/loading" component={Loading} />
-            <Route component={NoMatch} />
-          </Switch>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/chart" element={<Chart />} />
+              <Route path="/addjob" element={<AddJob />} />
+              <Route path="/search" element={<Search />} />
+              <Route path="/board" element={<Board />} />
+              <Route path="/updatejob" element={<UpdateJob />} />
+              {/* <Route path="/viewjobs" element={<ViewJobs />} /> */}
+              <Route path="/forgotpw" element={<ResetPW />} />
+              <Route path="/updatepw" element={<UpdatePW />} />
+              <Route path="/loading" element={<Loading />} />
+              {/* NoMatch Route for 404 */}
+              <Route path="*" element={<NoMatch />} />
+            </Routes>
           </main>
         </div>
       </Router>
@@ -85,14 +88,14 @@ class App extends Component {
 }
 
 // The nav bar needs to know whether we're logged in
-const mapStateToProps = state => ({
-  app: state.app
+const mapStateToProps = (state) => ({
+  app: state.app,
 });
 
-const mapDispatchToProps = (dispatch, props) => ({
+const mapDispatchToProps = {
   appLoginUpdate,
   appLogoutUpdate,
-  appInitialLoad
-})
+  appInitialLoad,
+};
 
-export default connect(mapStateToProps,mapDispatchToProps())(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

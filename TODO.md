@@ -142,6 +142,9 @@ warning " > chartjs-plugin-datalabels@0.3.0" has incorrect peer dependency "char
         - react-awesome-reveal: This will replace react-reveal. `import Tada from 'react-reveal/Tada'` and `import Fade from 'react-reveal/Tada'` can be `import { Tada, Fase } from 'react-awesome-reveal'` and then the component usage in the code must be changed.
 
         - @hello-pangea/dnd: This will replace replace `react-beautifl-dnd`. Instead of `import { DragDropContext } from 'react-beautiful-dnd'`, we can instead do `import { DragDropContext } from '@hello-pangea/dnd'` and need to further test what parts of the application break.
+
+32. **Verify Menu.js isn't needed and remove it**
+    self-explanatory
 ```
 
 # For Me

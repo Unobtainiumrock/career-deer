@@ -1,6 +1,6 @@
+// configureStore.js
 
-import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
-import { reducer as formReducer } from 'redux-form';
+import { configureStore as reduxConfigureStore, combineReducers } from '@reduxjs/toolkit';
 import thunk from 'redux-thunk';
 
 // Reducers
@@ -13,12 +13,15 @@ import addJobReducer from './containers/AddJob/reducer';
 import { grabJobsReducer } from './containers/Board/reducer';
 import updateJobReducer from './containers/UpdateJob/reducer';
 import viewJobsReducer from './containers/ViewJobs/reducer';
-import { reducer as burgerMenuReducer } from 'redux-burger-menu';
+import burgerMenuReducer from './containers/BurgerMenu/reducer';
 import searchReducer from './containers/Search/reducer';
 
-const allReducers = combineReducers({
+// If you're still using redux-form, import its reducer
+import { reducer as formReducer } from 'redux-form';
+
+const rootReducer = combineReducers({
   app: appReducer,
-  form: formReducer,
+  form: formReducer, // Note: redux-form is deprecated; consider migrating in the future
   loggedIn: loginReducer,
   signedUp: signUpReducer,
   pwReset: pwResetReducer,
@@ -33,35 +36,12 @@ const allReducers = combineReducers({
 });
 
 export default function configureStore(initialState = {}) {
-// Add more middlewares here as needed.
-const middlewares = [
-  thunk
-]
-
-const enhancers = [
-  applyMiddleware(...middlewares)
-];
-
-// This is being used so I'm still allowed to apply a series of middlewares in production
-// AND have redux dev tools extensions still accessible if it is installed for development
-// https://paulkogel.gitbooks.io/redux-docs/content/docs/api/compose.html
-// Compose is really cool, and worth playing around with
-// just by itself with basic functions I think.
-const composeEnhancers =
-process.env.NODE_ENV !== 'production' &&
-typeof window === 'object' &&
-window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-  ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
-    shouldHotReload: false,
-  })
-  : compose;
-
-
-  const store = createStore(
-    allReducers,
-    initialState,
-    composeEnhancers(...enhancers)
-  );
+  const store = reduxConfigureStore({
+    reducer: rootReducer,
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk),
+    devTools: process.env.NODE_ENV !== 'production',
+    preloadedState: initialState,
+  });
 
   return store;
-};
+}

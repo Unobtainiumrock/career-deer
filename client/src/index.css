@@ -5,7 +5,7 @@ html {
 
 body {
     font-family: 'Roboto', sans-serif;
-    background: url(/imgs/playstation-pattern.png) fixed;
+    background: url(../public/imgs/playstation-pattern.png) fixed;
     width: 100%;
 	height: 100%;
 }

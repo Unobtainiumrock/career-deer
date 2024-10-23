@@ -1,8 +1,9 @@
 // Vendor
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import './index.css';
-import registerServiceWorker from './registerServiceWorker';
+// Updated import for service worker registration (if needed)
+import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 // Updated import for the ThemeProvider and theme creation function
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 // This gives our app access to the store
@@ -12,17 +13,13 @@ import { Provider } from 'react-redux';
 import App from './containers/App/App';
 
 // Import our store configuration.
-// We've extracted the logic into a configureStore.js
-// file to keep this index.js cleaner and more focused on
-// what it needs to be concerned with.
 import configureStore from './configureStore';
 
-// We need to determine what we want the initial state of
-// the application to be.
+// We need to determine what we want the initial state of the application to be.
 import initialState from './initialState';
 
 const store = configureStore(initialState);
-const MOUNT_NODE = document.querySelector('#root');
+const MOUNT_NODE = document.getElementById('root');
 
 // Create a basic theme
 const theme = createTheme({
@@ -34,13 +31,18 @@ const theme = createTheme({
   },
 });
 
-ReactDOM.render(
-  <ThemeProvider theme={theme}>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </ThemeProvider>,
-  MOUNT_NODE
+const root = ReactDOM.createRoot(MOUNT_NODE)
+
+root.render(
+  <React.StrictMode>
+    <ThemeProvider theme={theme}>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </ThemeProvider>
+  </React.StrictMode>
 );
 
-registerServiceWorker();
+// If you're using service workers, register it here.
+// If you have updated to the newer service worker setup, use serviceWorkerRegistration
+serviceWorkerRegistration.unregister(); // Or register() if you want to enable it

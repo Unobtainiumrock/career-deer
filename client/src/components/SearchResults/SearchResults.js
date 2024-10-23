@@ -44,17 +44,6 @@ import './SearchResults.css';
 
 import PropTypes from 'prop-types';
 
-SearchResults.propTypes = {
-  results: PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired,
-    company_name: PropTypes.string.isRequired,
-    location: PropTypes.string.isRequired,
-  }).isRequired,
-  alreadySaved: PropTypes.bool.isRequired,
-  save: PropTypes.func.isRequired,
-};
-
 const SearchResults = (props) => {
   const link = props.results.title;
 
@@ -105,6 +94,17 @@ const SearchResults = (props) => {
       </div>
     </div>
   );
+};
+
+SearchResults.propTypes = {
+  results: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
+    company_name: PropTypes.string.isRequired,
+    location: PropTypes.string.isRequired,
+  }).isRequired,
+  alreadySaved: PropTypes.bool.isRequired,
+  save: PropTypes.func.isRequired,
 };
 
 export default SearchResults;
