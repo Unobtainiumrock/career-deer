@@ -2,53 +2,58 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const db = require('../models');
 
 const strategy = new GoogleStrategy(
-	{
-		clientID: process.env.GOOGLE_CLIENT_ID,
-		clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-		callbackURL: `${process.env.ROOT_URL}/auth/google/redirect`
-	},
-	function(token, tokenSecret, profile, done) {
-		// testing
-		console.log('===== GOOGLE PROFILE =======')
-		console.log(profile)
-		console.log('======== END ===========')
-    // code
-		const { id, name, photos } = profile
-		db.User.findOne({ 'google.googleId': id }, (err, userMatch) => {
-			// handle errors here:
-			if (err) {
-				console.log('Error!! trying to find user with googleId')
-				console.log(err)
-				return done(null, false)
-			}
-			// if there is already someone with that googleId
-			if (userMatch) {
-				return done(null, userMatch)
-			} else {
-				// if no user in our db, create a new user with that googleId
-				console.log('====== PRE SAVE =======')
-				console.log(id)
-				console.log(profile)
-				console.log('====== post save ....')
-				const newGoogleUser = new db.User({
-					'google.googleId': id,
-					firstName: name.givenName,
-					lastName: name.familyName,
-					photos: photos
-				})
-				// save this user
-				newGoogleUser.save((err, savedUser) => {
-					if (err) {
-						console.log('Error!! saving the new google user')
-						console.log(err)
-						return done(null, false)
-					} else {
-						return done(null, savedUser)
-					}
-				}) // closes newGoogleUser.save
-			}
-		}) // closes User.findONe
-	}
-)
+  {
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: `${process.env.ROOT_URL}/api/auth/google/callback`
+  },
+  async function(token, tokenSecret, profile, done) {
+    try {
+      console.log('===== GOOGLE PROFILE =======');
+      console.log(profile);
+      console.log('======== END ===========');
+
+      const { id, name, photos, emails } = profile;
+      const email = emails && emails[0] ? emails[0].value.toLowerCase() : null;
+
+      if (!email) {
+        console.log('No email found in Google profile.');
+        return done(null, false, { message: 'No email associated with this account.' });
+      }
+
+      // Check if user already exists with this Google ID
+      let user = await db.User.findOne({ googleId: id });
+
+      if (user) {
+        // User exists, proceed
+        return done(null, user);
+      } else {
+        // Check if a user with the same email exists
+        user = await db.User.findOne({ email });
+
+        if (user) {
+          // User exists with this email but hasn't linked Google account
+          user.googleId = id;
+          await user.save();
+          return done(null, user);
+        } else {
+          // Create a new user
+          const newGoogleUser = new db.User({
+            googleId: id,
+            email,
+            firstName: name.givenName,
+            lastName: name.familyName,
+          });
+
+          await newGoogleUser.save();
+          return done(null, newGoogleUser);
+        }
+      }
+    } catch (error) {
+      console.error('Error in Google Strategy:', error);
+      return done(error, null);
+    }
+  }
+);
 
 module.exports = strategy;
