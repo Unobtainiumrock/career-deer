@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
-import { Cookies } from 'react-cookie';
-
 import { Nav } from '../../components/Nav';
 import Home from '../Home/Home';
 import LoginPage from '../Login/LoginPage';
@@ -11,7 +9,6 @@ import NoMatch from '../NoMatch/NoMatch';
 import SignUp from '../SignUp/SignUp';
 import AddJob from '../AddJob/AddJob';
 import UpdateJob from '../UpdateJob/UpdateJob';
-import ViewJobs from '../ViewJobs/ViewJobs';
 import Chart from '../Chart/Chart';
 import Search from '../Search/Search';
 import Board from '../Board/Board';
@@ -23,34 +20,31 @@ import UpdatePW from '../UpdatePW/UpdatePW';
 
 // Redux stuff
 import { connect } from 'react-redux';
-import { appLoginUpdate, appLogoutUpdate, appInitialLoad } from './actions';
+import { appLogoutUpdate, appInitialLoad } from './actions';
 
 class App extends Component {
-  // cookies = new Cookies()
-
-  loginAction = (user) => {
-    this.props.appLoginUpdate(user);
-  };
-
-  logoutAction = () => {
-    this.props.appLogoutUpdate();
-  };
 
   componentDidMount() {
-    this.props.appInitialLoad();
+    this.props.appInitialLoad()
   }
 
-  selectNav() {
-    if (this.props.app.Loading) {
-      return null;
+  handleLogout = () => {
+    this.props.appLogoutUpdate();
+  }
+
+  renderNav() {
+    const { app } = this.props;
+
+    if (app.loading) {
+      return <Loading />;
     }
 
-    if (this.props.app.user) {
+    if (app.user) {
       return (
         <BurgerMenu
-          firstName={this.props.app.user ? this.props.app.user.firstName : 'Stray'}
-          lastName={this.props.app.user ? this.props.app.user.lastName : 'Deer'}
-          logoutAction={this.logoutAction}
+          firstName={app.user.firstName || 'Stray'}
+          lastName={app.user.lastName || 'Deer'}
+          logoutAction={this.handleLogout}
         />
       );
     } else {
@@ -62,7 +56,7 @@ class App extends Component {
     return (
       <Router>
         <div id="outer-container">
-          {this.selectNav()}
+          {this.renderNav()}
           <main id="page-wrap">
             <Routes>
               <Route path="/" element={<Home />} />
@@ -73,7 +67,6 @@ class App extends Component {
               <Route path="/search" element={<Search />} />
               <Route path="/board" element={<Board />} />
               <Route path="/updatejob" element={<UpdateJob />} />
-              {/* <Route path="/viewjobs" element={<ViewJobs />} /> */}
               <Route path="/forgotpw" element={<ResetPW />} />
               <Route path="/updatepw" element={<UpdatePW />} />
               <Route path="/loading" element={<Loading />} />
@@ -93,7 +86,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  appLoginUpdate,
   appLogoutUpdate,
   appInitialLoad,
 };

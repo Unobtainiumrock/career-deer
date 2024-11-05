@@ -4,6 +4,7 @@ export const APP_LOGIN = 'APP_LOGIN_UPDATE';
 export const APP_LOGOUT = 'APP_LOGOUT';
 
 export function appInitialLoad() {
+  console.log('appInitialLoad called');
   return async (dispatch) => {
     const user = await initialLoad();
     return dispatch(appLoginUpdate(user.data));
