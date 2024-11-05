@@ -158,6 +158,10 @@ warning " > chartjs-plugin-datalabels@0.3.0" has incorrect peer dependency "char
 
 34. **Consider Integration of Yup Package**
     Rationale: Ensure that the validate function returns errors in the format expected by react-hook-form. Alternatively, use a schema validation library like Yup for better integration with react-hook-form.
+
+
+35. **Ensure that the application doesn't have unnecessary state management**
+    Some parts of the initialState.js can potentially be removed. Additionally, we need to double-check that some of the react components aren't working with excessive slices of the the store when mapping state to props.
 ```
 
 # For Me
