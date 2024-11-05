@@ -145,6 +145,19 @@ warning " > chartjs-plugin-datalabels@0.3.0" has incorrect peer dependency "char
 
 32. **Verify Menu.js isn't needed and remove it**
     self-explanatory
+
+
+33. **Autocomplete functionality**
+    A form field has an id or name attribute that the browser's autofill recognizes. However, it doesn't have an autocomplete attribute assigned. This might prevent the browser from correctly autofilling the form.
+
+    To fix this issue, provide an autocomplete attribute.
+
+    1 resource
+    Violating node
+    Learn more: HTML attribute: autocomplete.
+
+34. **Consider Integration of Yup Package**
+    Rationale: Ensure that the validate function returns errors in the format expected by react-hook-form. Alternatively, use a schema validation library like Yup for better integration with react-hook-form.
 ```
 
 # For Me
