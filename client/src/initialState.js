@@ -1,14 +1,13 @@
 // this is in a seperate file both for accessibility and to make the index.js much cleaner
 export default {
+  auth: {
+    isAuthenticated: false,
+    user: null,
+    loginError: null,
+    signUpError: null
+  },
   app: {
-    loading: true,
-    user: null
-  },
-  loggedIn: {
-    error: null,
-  },
-  signedUp: {
-    error: null,
+    loading: true
   },
   pwReset: {
     status: false,
