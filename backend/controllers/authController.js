@@ -1,32 +1,49 @@
 const db = require('../models');
-const passport = require('../config');
 const nodemailer = require('../services/nodemailer');
 const { generateHash } = require('random-hash');
 
+// controllers/authController.js
 module.exports = {
 
-  authenticate: async() => {
-    console.log('I am hit!');
-    res.json('I am hit!');
+  // Handle Google OAuth Callback
+  googleCallback: (req, res) => {
+    console.log('Google Callback Called!');
+    if (req.user) {
+      // Successfully authenticated, redirect to the desired route
+      res.redirect('/board');
+    } else {
+      // Authentication failed, redirect to login
+      res.redirect('/login');
+    }
   },
 
   initialLoad: (req, res) => {
-    let user = false;
-    console.log(req.user);
     if (req.user) {
-      user = {
-          email: req.user.email,
-          firstName: req.user.firstName,
-          lastName: req.user.lastName
-      }
+      const user = {
+        id: req.user._id,
+        email: req.user.email,
+        firstName: req.user.firstName,
+        lastName: req.user.lastName,
+      };
+      return res.json(user);
     }
-    res.json(user);
+    res.json(null);
   },
 
   signUp: async (req, res, next) => {
     try {
       const { email, firstName, lastName, password } = req.body;
-      const newUser = new db.User({ email, firstName, lastName });
+      const existingUser = await db.User.findOne({ email: email.toLowerCase() });
+  
+      if (existingUser) {
+        return res.status(409).json({ error: 'User with this email already exists.' });
+      }
+  
+      const newUser = new db.User({ 
+        email: email.toLowerCase(), 
+        firstName, 
+        lastName 
+      });
   
       await newUser.setPassword(password);
       await newUser.save();
@@ -34,39 +51,46 @@ module.exports = {
       const signUpEmailContent = getEmailContent('signUp', newUser.email, newUser.firstName, newUser.lastName);
       await nodemailer(signUpEmailContent);
   
-      passport.authenticate('local')(req, res, next);
+      // Log in the user
+      req.login(newUser, (err) => {
+        if (err) {
+          return next(err);
+        }
+        // Send user data after login
+        res.json({
+          email: newUser.email,
+          firstName: newUser.firstName,
+          lastName: newUser.lastName
+        });
+      });
     } catch (err) {
       res.status(422).json({ error: err.message });
     }
   },
   
-  login: async (req, res) => {
-    try {
-      const { email } = req.body;
-      const user = await db.User.findOne({ email });
-  
-      if (!user) {
-        return res.status(404).json({ error: "User not found" });
-      }
-  
+  login: (req, res) => {
+    // Since Passport.js sets up the session, send user data
+    if (req.user) {
       res.json({
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName
+        email: req.user.email,
+        firstName: req.user.firstName,
+        lastName: req.user.lastName
       });
-    } catch (err) {
-      res.status(500).json({ error: err.message });
+    } else {
+      res.status(401).json({ error: 'Authentication failed.' });
     }
   },
 
   logout: (req, res, next) => {
-    req.logOut();
-    req.session.destroy(err => {
-      if (err) {
-        return next(err);
-      }
-      res.clearCookie("connect.sid");
-      return res.json({ authenticated: req.isAuthenticated() });
+    req.logout(function(err) {
+      if (err) { return next(err); }
+      req.session.destroy(err => {
+        if (err) {
+          return next(err);
+        }
+        res.clearCookie("connect.sid");
+        return res.json({ authenticated: false });
+      });
     });
   },
 
@@ -74,27 +98,27 @@ module.exports = {
     try {
       const { email } = req.body;
       console.log(email);
-  
-      const randomHash = generateHash.generateHash({
+
+      const randomHash = generateHash({
         length: 64,
         charset: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_'
       });
-  
+
       const updatedUser = await db.User.findOneAndUpdate(
-        { email },
+        { email: email.toLowerCase() },
         { $set: { resetPW_hash: randomHash } },
-        { new: true } // Returns the updated document
+        { new: true }
       );
-  
+
       if (!updatedUser) {
         return res.status(404).json({ error: "User not found" });
       }
-  
-      const resetEmailContent = getEmailContent('resetPassword', user.email, user.firstName, user.lastName, randomHash);
+
+      const resetEmailContent = getEmailContent('resetPassword', updatedUser.email, updatedUser.firstName, updatedUser.lastName, randomHash);
       await nodemailer(resetEmailContent);
-  
+
       res.json({ email: updatedUser.email });
-  
+
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
@@ -104,23 +128,23 @@ module.exports = {
     if (req.body.code) {
       try {
         const { code, password } = req.body;
-  
-        const user = await db.User.findOne({ resetPW_hash: code });
-  
+
+        const user = await db.User.findOne({ resetPW_hash: code.toLowerCase() });
+
         if (!user) {
           return res.status(404).json({ error: "Invalid or expired reset code" });
         }
-  
+
         // Reset the password and clear the reset hash
         await user.setPassword(password);
         user.resetPW_hash = null;
         await user.save();
-  
+
         const updateEmailContent = getEmailContent('updatePassword', user.email, user.firstName, user.lastName);
         await nodemailer(updateEmailContent);
-  
+
         res.json({ status: "Password updated successfully" });
-  
+
       } catch (err) {
         res.status(500).json({ error: err.message });
       }
@@ -129,8 +153,8 @@ module.exports = {
     }
   },
 
-
 };
+
 
 // Note, we need to change this base url later, when the application is finallyupdated to be deployed to elsewhere.
 function getEmailContent(type, email, firstName, lastName, hash = '') {

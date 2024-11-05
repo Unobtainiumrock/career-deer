@@ -1,36 +1,21 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 const passportLocalMongoose = require('passport-local-mongoose');
 
-const userSchema = new Schema({
-  firstName: {
-    type: String,
-    required: true
-  },
-  lastName: {
-    type: String,
-    required: true
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  password: {
-    type: String,
-    required: false
-  },
-  resetPW_hash: {
-    type: String,
-    require: false,
-    default: null
+const UserSchema = new mongoose.Schema({
+  email: { type: String, required: true, unique: true, lowercase: true },
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
+  googleId: { type: String, default: null },
+  resetPW_hash: { type: String, default: null }
+});
+
+UserSchema.plugin(passportLocalMongoose, {
+  usernameField: 'email', // Use email instead of the default username
+  // Optional: disable username uniqueness error (since email is unique in the schema)
+  errorMessages: {
+    UserExistsError: 'A user with the given email is already registered.'
   }
 });
 
-userSchema.plugin(passportLocalMongoose, {
-  //Updating username field to email rather than default "username" from LocalStrategy
-  usernameField: 'email',
-});
-
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model('User', UserSchema);
 module.exports = User;

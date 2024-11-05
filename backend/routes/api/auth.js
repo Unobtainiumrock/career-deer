@@ -5,22 +5,21 @@ const passport = require('../../config');
 // Matching  api/auth/google
 router.route('/google')
   .get(passport.authenticate('google', {
-    scope: ['profile']
-  }, authController.authenticate));
-
-router.route('/google/redirect')
-  .get(passport.authenticate('google', {
-    successRedirect: '/',
-    failureRedirect: '/login'
+    scope: ['profile', 'email']
   }));
 
+router.get('/google/callback', 
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  authController.googleCallback
+);
 
+// Matching with /api/auth/load
 router.route('/load')
   .get(authController.initialLoad);
 
 // Matching with /api/auth/signup
 router.route('/signup')
-  .post(authController.signUp, authController.login);
+  .post(authController.signUp);
 
 // Matching with /api/auth/login
 router.route('/login')
@@ -32,5 +31,8 @@ router.route('/logout')
 
 router.route('/resetpw')
   .post(authController.resetPW);
+
+router.route('/updatepw')
+  .post(authController.updatepw);
 
 module.exports = router;
