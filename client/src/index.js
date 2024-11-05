@@ -12,6 +12,9 @@ import { Provider } from 'react-redux';
 // Core app
 import App from './containers/App/App';
 
+// Wrap App component in error boundary component to catch unexpected errors.
+import ErrorBoundary from './containers/ErrorBoundary/ErrorBoundary';
+
 // Import our store configuration.
 import configureStore from './configureStore';
 
@@ -37,7 +40,9 @@ root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <Provider store={store}>
-        <App />
+        <ErrorBoundary>
+          <App />
+        </ErrorBoundary>
       </Provider>
     </ThemeProvider>
   </React.StrictMode>
