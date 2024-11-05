@@ -48,6 +48,8 @@
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^5.0.1",
     "prop-types": "^15.8.1",
-    "random-hash": "^4.0.1"
+    "random-hash": "^4.0.1",
+    "react-bootstrap": "^2.10.5",
+    "react-scroll": "^1.9.0"
   }
 }
