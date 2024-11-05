@@ -1,42 +1,36 @@
-// configureStore.js
-
 import { configureStore as reduxConfigureStore, combineReducers } from '@reduxjs/toolkit';
-import thunk from 'redux-thunk';
 
 // Reducers
 import appReducer from './containers/App/reducer';
-import loginReducer from './containers/Login/reducer';
 import pwResetReducer from './containers/ResetPW/reducer';
-import { signUpReducer, googleAuthReducer } from './containers/SignUp/reducer';
+import pwUpdateReducer from './containers/UpdatePW/reducer';
+import authReducer from './containers/sharedReducers/authReducer'
 import chartReducer from './containers/Chart/reducer';
 import addJobReducer from './containers/AddJob/reducer';
-import { grabJobsReducer } from './containers/Board/reducer';
+import { grabJobsReducer, jobBoardReducer } from './containers/Board/reducer';
 import updateJobReducer from './containers/UpdateJob/reducer';
 import viewJobsReducer from './containers/ViewJobs/reducer';
 import burgerMenuReducer from './containers/BurgerMenu/reducer';
 import searchReducer from './containers/Search/reducer';
-// import { reducer as formReducer } from 'redux-form';
 
 const rootReducer = combineReducers({
   app: appReducer,
-  // form: formReducer,
-  loggedIn: loginReducer,
-  signedUp: signUpReducer,
+  auth: authReducer,
   pwReset: pwResetReducer,
-  googleAuth: googleAuthReducer,
+  pwUpdate: pwUpdateReducer,
   chartData: chartReducer,
   addJob: addJobReducer,
   viewJobs: viewJobsReducer,
+  jobBoard: jobBoardReducer,
   boards: grabJobsReducer,
   updateJob: updateJobReducer,
   burgerMenu: burgerMenuReducer,
-  searchData: searchReducer,
-});
+  searchData: searchReducer
+})
 
 export default function configureStore(initialState = {}) {
   const store = reduxConfigureStore({
     reducer: rootReducer,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk),
     devTools: process.env.NODE_ENV !== 'production',
     preloadedState: initialState,
   });
