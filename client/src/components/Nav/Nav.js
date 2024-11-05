@@ -8,20 +8,20 @@ const renderHomeNav = () => (
     <ul className="navbar-nav ml-auto w-100 justify-content-end">
       <li className="nav-item">
         <Scrollchor
-          to="#top"
+          to="top"
           className="nav-link active">
           Home
         </Scrollchor>
       </li>
       <li className="nav-item">
         <Scrollchor
-         to="#about"
+         to="about"
           className="nav-link">
           About
         </Scrollchor>
       </li>
       <li className="nav-item">
-        <Scrollchor to="#foreal"
+        <Scrollchor to="foreal"
           className="nav-link">
          Learn More
         </Scrollchor>
