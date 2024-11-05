@@ -1,86 +1,34 @@
-// const axios = require('axios');
 import axios from 'axios';
 
-// Consider breaking apart the auth and jobs endpoints into separate API's.
+// Create an Axios instance with default configurations
+const apiClient = axios.create({
+  baseURL: 'http://localhost:3001/api/', // Base URL for all API requests
+  withCredentials: true, // Send cookies with requests
+});
+
+console.log('API Client object', apiClient);
 
 // Auth Endpoints
-// ======================================================
-
-export function initialLoad() {
-  return axios.get('/api/auth/load');
-}
-
-export function signUp(data) {
-  return axios.post('/api/auth/signup', data);
-};
-
-export function logIn(data) {
-  return axios.post('/api/auth/login', data);
-};
-
-export function logOut() {
-  return axios.get('/api/auth/logout');
-}
-
-export function resetPW(email){
-  return axios.post('/api/auth/resetpw', email);
-}
-
-export function updatePW(data){
-  return axios.post('/api/auth/updatepw', data);
-}
-
-// TESTING OAuth Logins
-export function googleSignUp(data) {
-  return axios.post('/auth/google', data);
-};
-
-// Not sure this is in use..
-// export function googleSignIn() {
-//   return axios.get('/auth/google');
-// };
-
-// ======================================================
-
+export const initialLoad = () => apiClient.get('/auth/load');
+export const signUp = (data) => apiClient.post('/auth/signup', data);
+export const logIn = (data) => apiClient.post('/auth/login', data);
+export const logOut = () => apiClient.get('/auth/logout');
+export const resetPW = (email) => apiClient.post('/auth/resetpw', email);
+export const updatePW = (data) => apiClient.post('/auth/updatepw', data);
 
 // Jobs Endpoints
-// ======================================================
-export function createJob(data) {
-  return axios.post('/api/jobs/saved', data);
-};
+export const createJob = (data) => apiClient.post('/jobs/saved', data);
+export const findAllJobsForUser = () => apiClient.get('/jobs/saved');
+export const getJobById = (id) => apiClient.get(`/jobs/saved/${id}`);
+export const deleteJobById = (id) => apiClient.delete(`/jobs/saved/${id}`);
+export const updateJobById = (id, data) => apiClient.put(`/jobs/saved/${id}`, data);
 
-export function findAllJobsForUser() {
-  return axios.get('/api/jobs/saved');
-};
+// Chart Endpoints
+export const aggregateJobDataForCharts = () => apiClient.get('/jobs/chart/all');
+export const getJobDataUser = () => apiClient.get('/jobs/chart/user');
+export const getUserPercentile = (saved, applied, phone, onSite, offer) =>
+  apiClient.get(`/jobs/chart/user/percentile/?saved=${saved}&applied=${applied}&phone=${phone}&onSite=${onSite}&offer=${offer}`);
 
-export function getJobById(id) {
-  return axios.get(`/api/jobs/saved/${id}`);
-};
-
-export function deleteJobById(id) {
-  return axios.delete(`/api/jobs/saved/${id}`);
-};
-
-export function updateJobById(id, data) {
-  console.log('I RUN SECOND!');
-  return axios.put(`/api/jobs/saved/${id}`, data);
-};
-
-  // Chart =====================
-export function aggregateJobDataForCharts() {
-  return axios.get('/api/jobs/chart/all');
-};
-
-export function getJobDataUser(){
-  return axios.get('/api/jobs/chart/user');
-};
-
-export function getUserPercentile(saved, applied, phone, onSite, offer){
-  return axios.get(`/api/jobs/chart/user/percentile/?saved=${saved}&applied=${applied}&phone=${phone}&onSite=${onSite}&offer=${offer}`);
-};
-
-// Search =====================
-export function getSearchResults(keywords, location){
-  return axios.get(`/api/jobs/search/?keywords=${keywords}&location=${location}`);
-};
-
+// Search Endpoints
+export const getSearchResults = (keywords, location) =>
+  apiClient.get(`/jobs/search/?keywords=${keywords}&location=${location}`);
