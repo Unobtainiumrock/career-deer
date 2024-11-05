@@ -162,6 +162,9 @@ warning " > chartjs-plugin-datalabels@0.3.0" has incorrect peer dependency "char
 
 35. **Ensure that the application doesn't have unnecessary state management**
     Some parts of the initialState.js can potentially be removed. Additionally, we need to double-check that some of the react components aren't working with excessive slices of the the store when mapping state to props.
+
+36. **Investigate adding rate limiting to certain areas**
+    See suggestions.js
 ```
 
 # For Me
