@@ -1,23 +1,23 @@
-export const validate = values => {
-  const errors = {};
-  if (!values.firstName) {
-    errors.firstName = 'Please input your first name'
-  }
-  if (!values.lastName) {
-    errors.lastName = 'Please input your last name'
-  }
-  if (!values.email) {
-    errors.email = 'You must enter an email'
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-    errors.email = 'Please enter a valid email address'
-  }
-  if (!values.password) {
-    errors.password = 'A password is required'
-  } else if (values.password.length < 6) {
-    errors.password = 'Your password must be at least 6 characters long'
-  }
-  if (values.password !== values.passwordRepeat){
-    errors.passwordRepeat = 'Your passwords do not match'
-  }
-  return errors;
-};
+import * as Yup from 'yup';
+
+export const validationSchema = Yup.object().shape({
+  firstName: Yup.string()
+    .required('First Name is required')
+    .matches(/^[A-Za-z]+$/, 'First Name can only contain letters'),
+  lastName: Yup.string()
+    .required('Last Name is required')
+    .matches(/^[A-Za-z]+$/, 'Last Name can only contain letters'),
+  email: Yup.string()
+    .required('Email is required')
+    .email('Invalid email address'),
+  password: Yup.string()
+    .required('Password is required')
+    .min(8, 'Password must be at least 8 characters')
+    .matches(/[a-z]/, 'Password must contain at least one lowercase letter')
+    .matches(/[A-Z]/, 'Password must contain at least one uppercase letter')
+    .matches(/\d/, 'Password must contain at least one number')
+    .matches(/[@$!%*?&#]/, 'Password must contain at least one special character'),
+  passwordRepeat: Yup.string()
+    .oneOf([Yup.ref('password'), null], 'Passwords must match')
+    .required('Please confirm your password'),
+});
