@@ -167,6 +167,9 @@ warning " > chartjs-plugin-datalabels@0.3.0" has incorrect peer dependency "char
     See suggestions.js
 ```
 
+37. **Revisit Nav Split Rendering**
+    The Nav functional component may not need to have this split difference in how Nav elements are shown. Revisit and consider whether or not they are needed.             
+
 # For Me
 
 I need to incorproate my following sentiment somewhere into why I am reviving Career Deer:
