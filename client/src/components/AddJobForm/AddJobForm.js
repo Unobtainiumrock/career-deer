@@ -1,18 +1,32 @@
 import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { TextField, Button, Grid, Typography } from '@mui/material';
+import {
+  TextField,
+  Button,
+  Typography,
+  CircularProgress,
+  Box,
+  Stack
+} from '@mui/material';
 import { validate, warn } from './validate';
 
 // Define the form's style
 const formStyle = {
   background: '#fff',
   borderRadius: '15px',
-  boxShadow: '0px 0px 1px #5B5B5B',
-  padding: '20px'
+  boxShadow: '0px 0px 10px #5B5B5B',
+  padding: '20px',
+  maxWidth: '600px',
+  margin: '0 auto'
 };
 
-const AddJobForm = ({ onSubmitForm, errorMessage }) => {
-  const { control, handleSubmit, formState: { errors, isSubmitting } } = useForm({
+const AddJobForm = ({ onSubmitForm, errorMessage, isLoading }) => {
+  const {
+    control,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting }
+  } = useForm({
     defaultValues: {
       title: '',
       company_name: '',
@@ -26,12 +40,10 @@ const AddJobForm = ({ onSubmitForm, errorMessage }) => {
       const validationErrors = validate(data);
       const warnings = warn(data);
 
-      // Here you would typically handle warnings separately
-      // For example, you could set them as `softErrors` in the state or display them differently
-      // This code snippet just showcases how you might set them up
-      Object.keys(warnings).forEach(key => {
+      // Handle warnings by setting them as soft errors
+      Object.keys(warnings).forEach((key) => {
         if (!validationErrors[key]) {
-          setError(key, { type: "warning", message: warnings[key] });
+          setError(key, { type: 'warning', message: warnings[key] });
         }
       });
 
@@ -39,49 +51,69 @@ const AddJobForm = ({ onSubmitForm, errorMessage }) => {
     }
   });
 
-  const onSubmit = data => {
+  const onSubmit = (data) => {
     onSubmitForm(data); // Call Redux action provided by the container
-  }
+  };
 
   return (
-    <form style={formStyle} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={2} justifyContent="center">
-        {['title', 'company_name', 'url', 'location', 'post_date', 'note'].map((field, index) => (
-          <Grid item xs={12} md={6} key={index}>
+    <Box component="form" sx={formStyle} onSubmit={handleSubmit(onSubmit)}>
+      <Stack spacing={3}>
+        {/* Form Fields */}
+        {['title', 'company_name', 'url', 'location', 'post_date', 'note'].map(
+          (field) => (
             <Controller
+              key={field}
               name={field}
               control={control}
-              rules={{ required: field + ' is required' }} // Custom messages or logic can be added here
-              render={({ field, fieldState }) => (
+              rules={{ required: `${field.replace('_', ' ')} is required` }}
+              render={({ field: controllerField, fieldState }) => (
                 <TextField
-                  {...field}
-                  label={field.charAt(0).toUpperCase() + field.slice(1).replace('_', ' ')}
+                  {...controllerField}
+                  label={
+                    field.charAt(0).toUpperCase() +
+                    field.slice(1).replace('_', ' ')
+                  }
                   fullWidth
                   required={field === 'title' || field === 'company_name'}
                   error={!!fieldState.error}
-                  helperText={fieldState.error ? fieldState.error.message : null}
+                  helperText={
+                    fieldState.error ? fieldState.error.message : null
+                  }
                   multiline={field === 'note'}
-                  rows={field === 'note' ? 2 : 1}
+                  rows={field === 'note' ? 4 : 1}
                   type={field === 'post_date' ? 'date' : 'text'}
-                  InputLabelProps={field === 'post_date' ? { shrink: true } : undefined}
+                  InputLabelProps={
+                    field === 'post_date' ? { shrink: true } : undefined
+                  }
                 />
               )}
             />
-          </Grid>
-        ))}
-        <Grid item xs={12}>
-          <Typography color="error">{errorMessage}</Typography>
+          )
+        )}
+
+        {/* Error Message */}
+        {errorMessage && (
+          <Typography color="error" align="center">
+            {errorMessage}
+          </Typography>
+        )}
+
+        {/* Submit Button */}
+        <Box textAlign="center">
           <Button
             variant="contained"
             color="primary"
             type="submit"
-            disabled={isSubmitting}
+            disabled={isSubmitting || isLoading}
+            startIcon={
+              isLoading ? <CircularProgress size={20} color="inherit" /> : null
+            }
           >
-            Track It!
+            {isLoading ? 'Submitting...' : 'Track It!'}
           </Button>
-        </Grid>
-      </Grid>
-    </form>
+        </Box>
+      </Stack>
+    </Box>
   );
 };
 

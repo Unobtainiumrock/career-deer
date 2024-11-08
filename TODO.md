@@ -170,6 +170,9 @@ warning " > chartjs-plugin-datalabels@0.3.0" has incorrect peer dependency "char
 37. **Revisit Nav Split Rendering**
     The Nav functional component may not need to have this split difference in how Nav elements are shown. Revisit and consider whether or not they are needed.             
 
+38. **Change initialState variables to use a word other than 'status'**
+    Should probably change over the name 'status' to 'success' and change error to 'failure', since that's the manner in which each variable on the state is being used.
+    Moreover, some of these may be able to be removed entirely if these parts of state don't need to persist --Deep investigate user flows and conditonal rendering.
 # For Me
 
 I need to incorproate my following sentiment somewhere into why I am reviving Career Deer:
