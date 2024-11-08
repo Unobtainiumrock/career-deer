@@ -18,16 +18,17 @@ module.exports = {
   },
 
   initialLoad: (req, res) => {
-    if (req.user) {
-      const user = {
-        id: req.user._id,
-        email: req.user.email,
-        firstName: req.user.firstName,
-        lastName: req.user.lastName,
-      };
-      return res.json(user);
+    if (!req.user) {
+      return res.status(401).json({ error: 'No authenticated user' });
     }
-    res.json(null);
+
+    const user = {
+      id: req.user._id,
+      email: req.user.email,
+      firstName: req.user.firstName,
+      lastName: req.user.lastName
+    };
+    return res.json(user);
   },
 
   signUp: async (req, res, next) => {
