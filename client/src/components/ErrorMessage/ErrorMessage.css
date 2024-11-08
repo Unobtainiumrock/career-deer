@@ -1,0 +1,14 @@
+.error-message {
+    position: relative;
+    /* existing styles */
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}

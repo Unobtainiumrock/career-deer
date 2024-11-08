@@ -498,7 +498,9 @@ class Board extends Component {
   };
 
   render() {
-    if (!this.props.app.user) {
+    const { isAuthenticated } = this.props;
+
+    if (!isAuthenticated) {
       return <Navigate to="/unauthorized" replace />;
     }
 
@@ -575,7 +577,7 @@ const mapStateToProps = (state, props) => {
   return {
     jobBoard: state.jobBoard,
     boards: state.boards,
-    app: state.app,
+    isAuthenticated: state.auth.isAuthenticated
   };
 };
 const mapDispatchToProps = {

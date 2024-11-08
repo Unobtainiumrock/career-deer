@@ -21,7 +21,7 @@ class LoginPage extends Component {
   };
 
   render() {
-    const { isAuthenticated, loginError } = this.props.auth;
+    const { isAuthenticated, loginError } = this.props;
 
     if (isAuthenticated) {
       return <Navigate to="/board" replace />;
@@ -35,7 +35,7 @@ class LoginPage extends Component {
               <Bounce>
                 <img
                   className="mt-4"
-                  src="/imgs/icons/login.svg"
+                  // src="/imgs/icons/login.svg"
                   alt="login illustration"
                 />
               </Bounce>
@@ -64,7 +64,6 @@ class LoginPage extends Component {
 LoginPage.propTypes = {
   auth: PropTypes.shape({
     isAuthenticated: PropTypes.bool.isRequired,
-    user: PropTypes.object,
     loginError: PropTypes.string,
   }).isRequired,
   loginThunk: PropTypes.func.isRequired,
@@ -72,7 +71,8 @@ LoginPage.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  auth: state.auth,
+  isAuthenticated: state.auth.isAuthenticated,
+  loginError: state.auth.loginError
 });
 
 const mapDispatchToProps = {

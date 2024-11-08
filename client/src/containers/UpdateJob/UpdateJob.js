@@ -65,13 +65,20 @@ import { Navigate } from 'react-router-dom';
 import UpdateJobForm from '../../components/UpdateJobForm/UpdateJobForm';
 import { Container, Col, Row } from '../../components/Grid';
 import { connect } from 'react-redux';
-import { executeDeleteJob, executeUpdateJob, resetUpdateJob } from './actions';
+import {
+  updateJobThunk,
+  deleteJobThunk,
+  resetUpdateJob,
+} from './actions';
+import PropTypes from 'prop-types';
+import Loading from '../../components/Loading/Loading';
+import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
 
 const UpdateJob = ({
   updateJob,
-  app,
-  executeUpdateJob,
-  executeDeleteJob,
+  user,
+  updateJobThunk,
+  deleteJobThunk,
   resetUpdateJob,
 }) => {
   useEffect(() => {
@@ -80,8 +87,16 @@ const UpdateJob = ({
     }
   }, [updateJob.job, resetUpdateJob]);
 
-  if (!app.user) {
+  if (!user) {
     return <Navigate to="/unauthorized" replace />;
+  }
+
+  if (updateJob.loading) {
+    return <Loading />;
+  }
+
+  if (updateJob.error) {
+    return <ErrorMessage message={updateJob.error} />;
   }
 
   if (updateJob.status || !updateJob.job) {
@@ -89,7 +104,7 @@ const UpdateJob = ({
   }
 
   const updateJobValues = (values) => {
-    executeUpdateJob({ ...values, _id: updateJob.job._id });
+    updateJobThunk({ ...values, _id: updateJob.job._id });
   };
 
   return (
@@ -106,7 +121,7 @@ const UpdateJob = ({
         <Col size="12 md-12 lg-10">
           <UpdateJobForm
             onSubmit={updateJobValues}
-            deleteJob={() => executeDeleteJob(updateJob.job._id)}
+            deleteJob={() => deleteJobThunk(updateJob.job._id)}
             initialValues={updateJob.job}
           />
         </Col>
@@ -116,14 +131,27 @@ const UpdateJob = ({
   );
 };
 
+UpdateJob.propTypes = {
+  updateJob: PropTypes.shape({
+    job: PropTypes.object,
+    status: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
+    error: PropTypes.string,
+  }).isRequired,
+  user: PropTypes.object,
+  updateJobThunk: PropTypes.func.isRequired,
+  deleteJobThunk: PropTypes.func.isRequired,
+  resetUpdateJob: PropTypes.func.isRequired,
+};
+
 const mapStateToProps = (state) => ({
   updateJob: state.updateJob,
-  app: state.app,
+  user: state.auth.user,
 });
 
 const mapDispatchToProps = {
-  executeDeleteJob,
-  executeUpdateJob,
+  updateJobThunk,
+  deleteJobThunk,
   resetUpdateJob,
 };
 

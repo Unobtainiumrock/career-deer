@@ -234,7 +234,7 @@
 // export default connect(mapStateToProps, mapDispatchToProps)(ViewJobs);
 
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { Container, Col, Row } from '../../components/Grid';
 
 import Card from '@mui/material/Card';
@@ -243,16 +243,16 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-import { Zoom, AttentionSeeker } from 'react-awesome-reveal'; // Updated import
+import { Zoom, AttentionSeeker } from 'react-awesome-reveal';
 
 import { connect } from 'react-redux';
-import { Cookies } from 'react-cookie';
 import {
   resetViewJobs,
   getAllSavedJobs,
   updateViewJobs,
 } from './actions';
 import { selectUpdateJob } from '../UpdateJob/actions';
+import PropTypes from 'prop-types';
 
 const cardStyles = {
   width: '250px',
@@ -264,19 +264,15 @@ const cardHeadingStyle = {
 };
 
 class ViewJobs extends Component {
-  constructor(props) {
-    super(props);
-    this.cookies = new Cookies();
-  }
-
   componentDidMount() {
-    this.props.getAllSavedJobs();
+    if (this.props.isAuthenticated) {
+      this.props.getAllSavedJobs();
+    }
   }
 
   render() {
-    if (!this.cookies.get('email')) {
-      window.location.pathname = '/unauthorized';
-      return null;
+    if (!this.props.isAuthenticated) {
+      return <Navigate to="/unauthorized" replace />;
     }
 
     return (
@@ -285,11 +281,7 @@ class ViewJobs extends Component {
           <Row className="justify-content-center text-center">
             <Col size="12 md-12 lg-10">
               <AttentionSeeker effect="bounce">
-                <img
-                  width="60%"
-                  src="/imgs/icons/houses.svg"
-                  alt="houses"
-                />
+                <img width="60%" src="/imgs/icons/houses.svg" alt="houses" />
               </AttentionSeeker>
             </Col>
           </Row>
@@ -327,9 +319,7 @@ class ViewJobs extends Component {
                         variant="contained"
                         color="primary"
                         onClick={() =>
-                          this.props.selectUpdateJob(
-                            this.props.viewJobs.data[i]
-                          )
+                          this.props.selectUpdateJob(this.props.viewJobs.data[i])
                         }
                         data-id={job._id}
                       >
@@ -354,13 +344,21 @@ class ViewJobs extends Component {
   }
 }
 
-const mapStateToProps = (state, props) => {
-  return {
-    viewJobs: state.viewJobs,
-    updateJob: state.updateJob,
-    app: state.app,
-  };
+ViewJobs.propTypes = {
+  viewJobs: PropTypes.shape({
+    data: PropTypes.array.isRequired,
+  }).isRequired,
+  updateJob: PropTypes.object.isRequired,
+  isAuthenticated: PropTypes.bool.isRequired,
+  getAllSavedJobs: PropTypes.func.isRequired,
+  selectUpdateJob: PropTypes.func.isRequired,
 };
+
+const mapStateToProps = (state) => ({
+  viewJobs: state.viewJobs,
+  updateJob: state.updateJob,
+  isAuthenticated: state.auth.isAuthenticated,
+});
 
 const mapDispatchToProps = {
   resetViewJobs,

@@ -8,6 +8,7 @@ import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 // This gives our app access to the store
 import { Provider } from 'react-redux';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 // Core app
 import App from './containers/App/App';
@@ -29,9 +30,8 @@ const theme = createTheme({
   palette: {
     primary: {
       main: '#556cd6',
-    },
-    // You can add more theme properties here
-  },
+    }
+  }
 });
 
 const root = ReactDOM.createRoot(MOUNT_NODE)
@@ -40,9 +40,11 @@ root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <Provider store={store}>
-        <ErrorBoundary>
-          <App />
-        </ErrorBoundary>
+        {/* <ErrorBoundary> */}
+          {/* <Router> */}
+            <App />
+          {/* </Router> */}
+        {/* </ErrorBoundary> */}
       </Provider>
     </ThemeProvider>
   </React.StrictMode>

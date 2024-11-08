@@ -32,7 +32,7 @@ class SignUp extends Component {
   };
 
   render() {
-    const { isAuthenticated, signUpError } = this.props.auth;
+    const { isAuthenticated, signUpError } = this.props;
 
     if (isAuthenticated) {
       return <Navigate to="/board" replace />;
@@ -74,17 +74,16 @@ class SignUp extends Component {
 }
 
 SignUp.propTypes = {
-  auth: PropTypes.shape({
-    isAuthenticated: PropTypes.bool.isRequired,
-    signUpError: PropTypes.string,
-  }).isRequired,
+  isAuthenticated: PropTypes.bool.isRequired,
+  signUpError: PropTypes.string,
   signUpThunk: PropTypes.func.isRequired,
-  resetSignUp: PropTypes.func.isRequired
+  resetSignUp: PropTypes.func.isRequired,
 };
 
 // Only need SignUp to be aware of the sign-up state.
 const mapStateToProps = (state) => ({
-  auth: state.auth
+  isAuthenticated: state.auth.isAuthenticated,
+  signUpError: state.auth.signUpError
 });
 
 const mapDispatchToProps = {

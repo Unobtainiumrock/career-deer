@@ -238,71 +238,102 @@ import { Container, Col, Row } from '../../components/Grid';
 import { connect } from 'react-redux';
 
 import { getSearchJobs, postSaveJob, getAllSavedJobs } from './actions';
-import LinearProgress from '@mui/material/LinearProgress'; // Updated import
-
-const huntStyle = {
-  display: 'block',
-  marginLeft: 'auto',
-  marginRight: 'auto',
-  marginTop: '10px',
-};
+import LinearProgress from '@mui/material/LinearProgress';
 
 class Search extends Component {
+  componentDidMount() {
+    this.props.getAllSavedJobs();
+  }
+
   searchJobs = (values) => {
     // Calling the search job action.
     this.props.getSearchJobs(values);
   };
 
   saveJob = (index) => {
-    const savedData = this.props.searchData.saved;
-    const saveJob_url = this.props.searchData.data[index].url;
+    const { searchData } = this.props;
+    const savedData = searchData.saved;
+    const jobToSave = searchData.data[index];
+    const saveJobUrl = jobToSave.url;
 
-    let unique = true;
-    for (let i = 0; i < savedData.length; i++) {
-      if (saveJob_url === savedData[i].url) {
-        // URL is found in saved jobs from database.
-        unique = false;
-      }
-    }
+    // Check if the job is already saved
+    const isUnique = !savedData.some((savedJob) => savedJob.url === saveJobUrl);
 
-    if (unique === true) {
-      this.props.postSaveJob(this.props.searchData.data[index]);
-      this.props.getAllSavedJobs();
+    if (isUnique) {
+      this.props.postSaveJob(jobToSave);
+      // No need to call getAllSavedJobs again, as the saved jobs should update via Redux
+      // this.props.getAllSavedJobs();
     }
   };
 
   alreadySaved = (index) => {
-    const savedData = this.props.searchData.saved;
-    const saveJob_url = this.props.searchData.data[index].url;
-    const alreadySaved = savedData.filter((elem) => {
-      return elem.url === saveJob_url;
-    });
-    return alreadySaved.length !== 0;
+    const { searchData } = this.props;
+    const savedData = searchData.saved;
+    const jobUrl = searchData.data[index].url;
+
+    return savedData.some((savedJob) => savedJob.url === jobUrl);
   };
 
-  componentDidMount() {
-    this.props.getAllSavedJobs();
-  }
-
   render() {
-    if (!this.props.app.user) {
+    const { isAuthenticated, searchData } = this.props;
+
+    if (!isAuthenticated) {
       return <Navigate to="/unauthorized" replace />;
     }
 
+    const huntStyle = {
+      display: 'block',
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      marginTop: '10px',
+    };
+
     return (
       <Container className="pt-5">
-        {/* ... Rest of your component remains unchanged ... */}
+        <Row className="justify-content-center">
+          <Col size="12 md-12 lg-5">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: 'spring' }}
+            >
+              <img
+                style={huntStyle}
+                src="/imgs/icons/hunt.svg"
+                alt="hunt the deer"
+              />
+            </motion.div>
+          </Col>
+          <Col size="12 md-12 lg-7">
+            <SearchForm
+              onSubmitForm={this.searchJobs}
+              errorMessage={searchData.error}
+            />
+          </Col>
+        </Row>
+        <br />
+        {searchData.loading && <LinearProgress />}
+        <Row className="justify-content-center mt-5">
+          <Col size="12 card">
+            {searchData.data.map((result, index) => (
+              <SearchResults
+                key={index}
+                results={result}
+                save={() => this.saveJob(index)}
+                alreadySaved={this.alreadySaved(index)}
+              />
+            ))}
+          </Col>
+        </Row>
       </Container>
     );
   }
 }
 
-const mapStateToProps = (state, props) => {
-  return {
-    searchData: state.searchData,
-    app: state.app,
-  };
-};
+const mapStateToProps = (state) => ({
+  searchData: state.searchData,
+  isAuthenticated: state.auth.isAuthenticated,
+});
 
 const mapDispatchToProps = {
   getSearchJobs,
