@@ -33,8 +33,8 @@ const SignUpForm = ({ onSubmit, errorMessage }) => {
   });
 
   // Regular Sign-Up Handler
-  const handleRegularSignUp = (data) => {
-    onSubmit(data, 'default');
+  const handleRegularSignUp = async (data) => {
+    await onSubmit(data, 'default');
     reset();
   };
 
@@ -117,3 +117,16 @@ SignUpForm.defaultProps = {
 };
 
 export default SignUpForm;
+
+
+// Incase windlow.location.href causes sercurity issues for Google OAuth flow, use:
+
+//<Button
+// component="a"
+// href="/api/auth/google"
+// variant="outlined"
+// color="secondary"
+// disabled={isSubmitting}
+// >
+// Sign Up with Google
+// </Button>
