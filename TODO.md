@@ -173,6 +173,9 @@ warning " > chartjs-plugin-datalabels@0.3.0" has incorrect peer dependency "char
 38. **Change initialState variables to use a word other than 'status'**
     Should probably change over the name 'status' to 'success' and change error to 'failure', since that's the manner in which each variable on the state is being used.
     Moreover, some of these may be able to be removed entirely if these parts of state don't need to persist --Deep investigate user flows and conditonal rendering.
+
+39. **The implementation of data-mapper.js needs work**
+    The implementation is very naive and either outright not needed, or can be significantly improved in terms of performance from a few simple changes to the underlying data structures and algorithm.
 # For Me
 
 I need to incorproate my following sentiment somewhere into why I am reviving Career Deer:

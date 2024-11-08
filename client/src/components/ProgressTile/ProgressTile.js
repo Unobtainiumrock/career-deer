@@ -45,9 +45,12 @@
 
 // export default ProgressTile;
 
+// ProgressTile.js
+
 import React, { Component } from 'react';
-import { Droppable } from '@hello-pangea/dnd'; // Updated import
+import { Droppable } from '@hello-pangea/dnd';
 import JobTile from './JobTile';
+import { Box, Typography } from '@mui/material';
 import './ProgessTile.css';
 
 const getListStyle = (isDraggingOver) => ({
@@ -63,36 +66,32 @@ const getListStyle = (isDraggingOver) => ({
 
 class ProgressTile extends Component {
   render() {
+    const { name, jobsList, selectUpdateJob, deleteJobThunk } = this.props;
+
     return (
-      <Droppable droppableId={this.props.name} key={`board-${this.props.name}`}>
+      <Droppable droppableId={name} key={`board-${name}`}>
         {(provided, snapshot) => (
-          <div className="mb-5 mx-1 inline">
-            <h3 className="text-center text-uppercase montserrat">
-              {this.props.name}
-            </h3>
-            <div
+          <Box className="mb-5 mx-1 inline">
+            <Typography variant="h5" align="center" className="text-uppercase montserrat">
+              {name}
+            </Typography>
+            <Box
               ref={provided.innerRef}
-              {...provided.droppableProps} // Added this line
-              style={getListStyle(snapshot.isDraggingOver)}
+              {...provided.droppableProps}
+              sx={getListStyle(snapshot.isDraggingOver)}
             >
-              {this.props.jobsList.map((val, idx) => {
-                return JobTile(
-                  `${this.props.name}-job-${idx}`,
-                  val,
-                  idx,
-                  this.props.updateJob,
-                  () => {
-                    this.props.deleteJob(
-                      val._id,
-                      this.props.jobsList,
-                      this.props.name
-                    );
-                  }
-                );
-              })}
+              {jobsList.map((job, index) => (
+                <JobTile
+                  key={job._id}
+                  job={job}
+                  idx={index}
+                  selectUpdateJob={selectUpdateJob}
+                  deleteJobThunk={() => deleteJobThunk(job._id, jobsList, name)}
+                />
+              ))}
               {provided.placeholder}
-            </div>
-          </div>
+            </Box>
+          </Box>
         )}
       </Droppable>
     );

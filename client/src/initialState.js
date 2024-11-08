@@ -6,11 +6,11 @@ export default {
     signUpError: null,
     loadUserError: null,
     logoutError: null,
-    loading: false,
+    loading: false
   },
   pwReset: {
     status: false,
-    error: null,
+    error: null
   },
   pwUpdate: {
     status: false,
@@ -19,29 +19,29 @@ export default {
   },
   addJob: {
     status: false,
-    error: null,
+    error: null
   },
   updateJob: {
     status: false,
     error: null,
-    job: null,
+    job: null
   },
   searchData: {
     loading: false,
     data: [],
     saved: [],
-    error: null,
+    error: null
   },
   chartData: {
     sample: {
-      title: ' (SAMPLE)',
+      title: ' (SAMPLE)'
     },
     all: {
       labels: [
         'Saved', 'Applied', 'Phone Interview', 'On-site Interview', 'Offer',
       ],
       data: [50, 30, 20, 10, 5],
-      percentage: [44, 26, 17, 9, 4],
+      percentage: [44, 26, 17, 9, 4]
     },
     user: {
       labels: [
@@ -59,21 +59,22 @@ export default {
         onSite: 50,
         onSiteArr: [1, 1],
         offer: 50,
-        offerArr: [1, 1],
+        offerArr: [1, 1]
       },
-    },
+    }
   },
   jobBoard: {
     loading: true,
-  },
-  boards: {
-    saved: [],
-    applied: [],
-    phone: [],
-    'on-site': [],
-    offer: [],
+    error: null,
+    boards: {
+      saved: [],
+      applied: [],
+      phone: [],
+      'on-site': [],
+      offer: []
+    }
   },
   burgerMenu: {
-    isOpen: true,
-  },
+    isOpen: true
+  }
 };

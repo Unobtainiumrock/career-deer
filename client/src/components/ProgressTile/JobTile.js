@@ -100,14 +100,14 @@
 // export default JobTile;
 
 import React from 'react';
-import { Draggable } from '@hello-pangea/dnd'; // Updated import
-import Card from '@mui/material/Card'; // Updated import
-import CardActions from '@mui/material/CardActions'; // Updated import
-import CardContent from '@mui/material/CardContent'; // Updated import
-import IconButton from '@mui/material/IconButton'; // Updated import
-import Button from '@mui/material/Button'; // Updated import
-import Typography from '@mui/material/Typography'; // Updated import
-import Tooltip from '@mui/material/Tooltip'; // Updated import
+import { Draggable } from '@hello-pangea/dnd';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Tooltip from '@mui/material/Tooltip';
 
 import { Link } from 'react-router-dom';
 
@@ -119,10 +119,10 @@ const cardHeadingStyle = {
   color: '#5869A7',
 };
 
-const JobTile = ({ job, idx, selectUpdateJob, executeDeleteJob }) => {
+const JobTile = ({ job, idx, selectUpdateJob, deleteJobThunk }) => {
   return (
     <Draggable draggableId={job._id} index={idx}>
-      {(provided, snapshot) => (
+      {(provided) => (
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
@@ -136,7 +136,7 @@ const JobTile = ({ job, idx, selectUpdateJob, executeDeleteJob }) => {
             <CardContent>
               <IconButton
                 className="float-right delete-icon"
-                onClick={executeDeleteJob}
+                onClick={deleteJobThunk}
               >
                 <i className="fas fa-times"></i>
               </IconButton>
@@ -144,7 +144,7 @@ const JobTile = ({ job, idx, selectUpdateJob, executeDeleteJob }) => {
                 {job.company_name}
               </Typography>
               <Typography
-                variant="h5" // Updated variant
+                variant="h5"
                 component="h2"
                 style={cardHeadingStyle}
               >
@@ -167,17 +167,21 @@ const JobTile = ({ job, idx, selectUpdateJob, executeDeleteJob }) => {
                 <br />
               </Typography>
 
-              {job.note
-                ? job.note.map((element, i) => (
-                    <Typography
-                      key={`note-${i}`}
-                      className="note my-2"
-                      component="p"
-                    >
-                      {element || 'no notes yet...'}
-                    </Typography>
-                  ))
-                : null}
+              {Array.isArray(job.note) && job.note.length > 0 ? (
+                job.note.map((element, i) => (
+                  <Typography
+                    key={`note-${i}`}
+                    className="note my-2"
+                    component="p"
+                  >
+                    {element || 'no notes yet...'}
+                  </Typography>
+                ))
+              ) : (
+                <Typography className="note my-2" component="p">
+                  No notes yet...
+                </Typography>
+              )}
             </CardContent>
             <CardActions className="float-right button-margin">
               <Link to="/updatejob">
