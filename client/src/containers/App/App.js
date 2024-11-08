@@ -14,36 +14,33 @@ import Search from '../Search/Search';
 import Board from '../Board/Board';
 import BurgerMenu from '../../components/BurgerMenu/BurgerMenu';
 import Loading from '../../components/Loading/Loading';
+import ProtectedRoute from '../ProtectedRoute';
 
 import ResetPW from '../ResetPW/ResetPW';
 import UpdatePW from '../UpdatePW/UpdatePW';
 
 // Redux stuff
 import { connect } from 'react-redux';
-import { appLogoutUpdate, appInitialLoad } from './actions';
+import { loadUser, logoutThunk } from '../sharedActions/authActions';
 
 class App extends Component {
 
   componentDidMount() {
-    this.props.appInitialLoad()
+    this.props.loadUser();
   }
 
   handleLogout = () => {
-    this.props.appLogoutUpdate();
+    this.props.logoutThunk();
   }
 
   renderNav() {
-    const { app } = this.props;
+    const { user } = this.props;
 
-    if (app.loading) {
-      return <Loading />;
-    }
-
-    if (app.user) {
+    if (user) {
       return (
         <BurgerMenu
-          firstName={app.user.firstName || 'Stray'}
-          lastName={app.user.lastName || 'Deer'}
+          firstName={user.firstName || 'Stray'}
+          lastName={user.lastName || 'Deer'}
           logoutAction={this.handleLogout}
         />
       );
@@ -53,6 +50,13 @@ class App extends Component {
   }
 
   render() {
+    const { loading } = this.props;
+    console.log("Props", this.props);
+    
+    if (loading) {
+      return <Loading />;
+    }
+
     return (
       <Router>
         <div id="outer-container">
@@ -62,13 +66,13 @@ class App extends Component {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignUp />} />
-              <Route path="/chart" element={<Chart />} />
-              <Route path="/addjob" element={<AddJob />} />
-              <Route path="/search" element={<Search />} />
-              <Route path="/board" element={<Board />} />
-              <Route path="/updatejob" element={<UpdateJob />} />
+              <Route path="/chart" element={<ProtectedRoute><Chart /></ProtectedRoute>} />
+              <Route path="/addjob" element={<ProtectedRoute><AddJob /></ProtectedRoute>} />
+              <Route path="/search" element={<ProtectedRoute><Search /></ProtectedRoute>} />
+              <Route path="/board" element={<ProtectedRoute><Board /></ProtectedRoute>} />
+              <Route path="/updatejob" element={<ProtectedRoute><UpdateJob /></ProtectedRoute>} />
               <Route path="/forgotpw" element={<ResetPW />} />
-              <Route path="/updatepw" element={<UpdatePW />} />
+              <Route path="/updatepw" element={<ProtectedRoute><UpdatePW /></ProtectedRoute>} />
               <Route path="/loading" element={<Loading />} />
               {/* NoMatch Route for 404 */}
               <Route path="*" element={<NoMatch />} />
@@ -82,12 +86,13 @@ class App extends Component {
 
 // The nav bar needs to know whether we're logged in
 const mapStateToProps = (state) => ({
-  app: state.app,
+  user: state.auth.user,
+  loading: state.auth.loading
 });
 
 const mapDispatchToProps = {
-  appLogoutUpdate,
-  appInitialLoad,
+  loadUser,
+  logoutThunk
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
