@@ -1,7 +1,7 @@
 import { configureStore as reduxConfigureStore, combineReducers } from '@reduxjs/toolkit';
 
 // Reducers
-import appReducer from './containers/App/reducer';
+// import appReducer from './containers/App/reducer';
 import pwResetReducer from './containers/ResetPW/reducer';
 import pwUpdateReducer from './containers/UpdatePW/reducer';
 import authReducer from './containers/sharedReducers/authReducer'
@@ -14,7 +14,6 @@ import burgerMenuReducer from './containers/BurgerMenu/reducer';
 import searchReducer from './containers/Search/reducer';
 
 const rootReducer = combineReducers({
-  app: appReducer,
   auth: authReducer,
   pwReset: pwResetReducer,
   pwUpdate: pwUpdateReducer,
