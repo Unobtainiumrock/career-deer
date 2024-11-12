@@ -51,7 +51,6 @@ class App extends Component {
 
   render() {
     const { loading } = this.props;
-    console.log("Props", this.props);
     
     if (loading) {
       return <Loading />;
