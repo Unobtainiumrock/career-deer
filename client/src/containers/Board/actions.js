@@ -121,7 +121,8 @@ export const loadJobsThunk = () => async (dispatch) => {
 		}
 	  });  
 	  // Update the job's progress_stage in the backend
-	  await updateJobById(draggableId, { progress_stage: updatedJob.progress_stage });
+	  console.log('Updated Job:', updatedJob);
+	  await updateJobById(draggableId, { progress_stage: updatedJob.progress_stage, user: updatedJob.user, _id: updatedJob.user, post_date: updatedJob.post_date });
 	  // Dispatch the success action with updatedBoards
 	  dispatch(moveJobSuccess(updatedBoards));
 	} catch (err) {
