@@ -62,10 +62,8 @@ class LoginPage extends Component {
 }
 
 LoginPage.propTypes = {
-  auth: PropTypes.shape({
-    isAuthenticated: PropTypes.bool.isRequired,
-    loginError: PropTypes.string,
-  }).isRequired,
+  isAuthenticated: PropTypes.bool.isRequired,
+  loginError: PropTypes.string,
   loginThunk: PropTypes.func.isRequired,
   resetLogin: PropTypes.func.isRequired
 };
