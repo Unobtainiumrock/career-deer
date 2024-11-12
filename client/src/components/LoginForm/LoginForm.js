@@ -12,7 +12,7 @@ const FormStyle = {
   boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)'
 };
 
-const LoginForm = ({ onSubmit, errorMessage }) => {
+const LoginForm = ({ onSubmit, errorMessage = '' }) => {
   const {
     handleSubmit,
     control,
@@ -98,10 +98,6 @@ const LoginForm = ({ onSubmit, errorMessage }) => {
 LoginForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   errorMessage: PropTypes.string
-};
-
-LoginForm.defaultProps = {
-  errorMessage: ''
 };
 
 export default LoginForm;
