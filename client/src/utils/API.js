@@ -6,8 +6,6 @@ const apiClient = axios.create({
   withCredentials: true, // Send cookies with requests
 });
 
-console.log('API Client object', apiClient);
-
 // Auth Endpoints
 export const initialLoad = () => apiClient.get('/auth/load');
 export const signUp = (data) => apiClient.post('/auth/signup', data);
