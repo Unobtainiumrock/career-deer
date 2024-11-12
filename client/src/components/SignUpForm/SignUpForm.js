@@ -14,7 +14,7 @@ const FormStyle = {
   boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
 };
 
-const SignUpForm = ({ onSubmit, errorMessage }) => {
+const SignUpForm = ({ onSubmit, errorMessage = '' }) => {
   const {
     control,
     handleSubmit,
@@ -112,12 +112,7 @@ SignUpForm.propTypes = {
   errorMessage: PropTypes.string, // Can be undefined or null
 };
 
-SignUpForm.defaultProps = {
-  errorMessage: '',
-};
-
 export default SignUpForm;
-
 
 // Incase windlow.location.href causes sercurity issues for Google OAuth flow, use:
 
