@@ -176,6 +176,9 @@ warning " > chartjs-plugin-datalabels@0.3.0" has incorrect peer dependency "char
 
 39. **The implementation of data-mapper.js needs work**
     The implementation is very naive and either outright not needed, or can be significantly improved in terms of performance from a few simple changes to the underlying data structures and algorithm.
+
+40. **Split apart the BurgerMenu into functional and container components**
+    self-explanatory
 # For Me
 
 I need to incorproate my following sentiment somewhere into why I am reviving Career Deer:
