@@ -31,7 +31,8 @@ module.exports = {
   },
   update: async (req, res) => {
     try {
-      let query = { _id: req.body._id, user: req.user._id };
+      let query = { _id: req.body._id, user: req.body.user, post_date: req.body.post_date };
+      console.log('Query:', query);
       const newJob = {
         ...req.body,
         post_date: new Date(req.body.post_date),
