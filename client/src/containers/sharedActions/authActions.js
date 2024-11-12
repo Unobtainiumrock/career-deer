@@ -94,7 +94,6 @@ export const resetLogin = () => ({
  * Thunk to load the authenticated user's data.
  */
 export const loadUser = () => async (dispatch) => {
-  console.log('load user called');
   dispatch(loadUserRequest());
   try {
     const res = await initialLoad();
