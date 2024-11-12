@@ -5,25 +5,32 @@ import { Link } from 'react-router-dom';
 import './BurgerMenu.css';
 import { logOut } from '../../utils/API';
 import { toggleMenu } from '../../containers/BurgerMenu/actions';
-const BurgerMenu = (props) => {
+
+const BurgerMenu = ({
+  isOpen = false,
+  firstName = '',
+  lastName = '',
+  toggleMenu
+}) => {
   const executeLogout = async () => {
     await logOut();
     window.location.pathname = '/';
   };
 
   const handleStateChange = (state) => {
-    props.toggleMenu(state.isOpen);
+    toggleMenu(state.isOpen);
   };
 
   const closeMenu = () => {
-    props.toggleMenu(false);
+    toggleMenu(false);
   };
 
   return (
-    <Menu
-      isOpen={props.isOpen}
+    <Menu 
+      isOpen={isOpen}
       onStateChange={handleStateChange}
-    >
+      outerContainerId='outer-container'
+      pageWrapId='page-wrap'>
       <img
         width="50px"
         className="text-center my-3"
@@ -32,7 +39,7 @@ const BurgerMenu = (props) => {
       />
 
       <h3 className="pb-0">
-        Hello {`${props.firstName} ${props.lastName}`}!
+        Hello {`${firstName} ${lastName}`}!
       </h3>
       <Link
         to="/board"
