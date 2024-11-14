@@ -97,12 +97,11 @@ export const loadUser = () => async (dispatch) => {
   dispatch(loadUserRequest());
   try {
     const res = await initialLoad();
-    if (res.data && res.status == 200) {
+    if (res.data && res.status === 200) {
       dispatch(loadUserSuccess(res.data));
     } else {
       throw new Error('No authenticated user');
     }
-    dispatch(loadUserSuccess(res.data));
   } catch (err) {
     console.error('Load user failed with error:', err);
     const errorMsg = err.response?.data?.error || err.message || 'Load user failed';

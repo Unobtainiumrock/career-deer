@@ -37,17 +37,15 @@ const theme = createTheme({
 const root = ReactDOM.createRoot(MOUNT_NODE)
 
 root.render(
-  <React.StrictMode>
     <ThemeProvider theme={theme}>
       <Provider store={store}>
-        {/* <ErrorBoundary> */}
-          {/* <Router> */}
+        <Router>
+          <ErrorBoundary>
             <App />
-          {/* </Router> */}
-        {/* </ErrorBoundary> */}
+          </ErrorBoundary>
+        </Router>
       </Provider>
     </ThemeProvider>
-  </React.StrictMode>
 );
 
 // If you're using service workers, register it here.

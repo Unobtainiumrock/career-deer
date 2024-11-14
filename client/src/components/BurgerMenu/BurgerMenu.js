@@ -1,36 +1,37 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { elastic as Menu } from 'react-burger-menu';
-import { Link } from 'react-router-dom';
+import Menu from './react-burger-menu/elastic';
+import { Link, useNavigate } from 'react-router-dom';
 import './BurgerMenu.css';
-import { logOut } from '../../utils/API';
 import { toggleMenu } from '../../containers/BurgerMenu/actions';
+import { logoutThunk } from '../../containers/sharedActions/authActions';
+import PropTypes from 'prop-types';
 
 const BurgerMenu = ({
-  isOpen = false,
-  firstName = '',
-  lastName = '',
-  toggleMenu
+  isOpen,
+  firstName,
+  lastName,
+  toggleMenu,
+  logoutThunk
 }) => {
-  const executeLogout = async () => {
-    await logOut();
-    window.location.pathname = '/';
-  };
-
-  const handleStateChange = (state) => {
-    toggleMenu(state.isOpen);
-  };
+  const navigate = useNavigate();
 
   const closeMenu = () => {
     toggleMenu(false);
   };
 
+  const executeLogout = async () => {
+    await logoutThunk();
+    navigate('/');
+  };
+
   return (
-    <Menu 
+    <Menu
       isOpen={isOpen}
-      onStateChange={handleStateChange}
-      outerContainerId='outer-container'
-      pageWrapId='page-wrap'>
+      onStateChange={(state) => toggleMenu(state.isOpen)}
+      outerContainerId="outer-container"
+      pageWrapId="page-wrap"
+    >
       <img
         width="50px"
         className="text-center my-3"
@@ -54,11 +55,7 @@ const BurgerMenu = ({
       <Link to="/search" className="menu-item" onClick={closeMenu}>
         <i className="fas fa-search"></i> &nbsp; &nbsp; Search for Jobs
       </Link>
-      <Link
-        to="/chart"
-        className="menu-item mb-3"
-        onClick={closeMenu}
-      >
+      <Link to="/chart" className="menu-item mb-3" onClick={closeMenu}>
         <i className="fas fa-chart-bar"></i> &nbsp; &nbsp; Progress Charts
       </Link>
       <p
@@ -74,15 +71,23 @@ const BurgerMenu = ({
   );
 };
 
+BurgerMenu.propTypes = {
+  isOpen: PropTypes.bool,
+  firstName: PropTypes.string,
+  lastName: PropTypes.string,
+  toggleMenu: PropTypes.func.isRequired,
+  logoutThunk: PropTypes.func.isRequired,
+};
+
 const mapStateToProps = (state) => ({
   isOpen: state.burgerMenu.isOpen,
-  firstName: state.auth.user ? state.auth.user.firstName : '',
-  lastName: state.auth.user ? state.auth.user.lastName : '',
+  firstName: state.auth.user?.firstName || 'Stray',
+  lastName: state.auth.user?.lastName || 'Deer',
 });
 
 const mapDispatchToProps = {
   toggleMenu,
+  logoutThunk,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(BurgerMenu);
-

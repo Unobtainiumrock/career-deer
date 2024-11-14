@@ -6,7 +6,7 @@ export default {
     signUpError: null,
     loadUserError: null,
     logoutError: null,
-    loading: false
+    loading: true
   },
   pwReset: {
     status: false,
@@ -64,17 +64,28 @@ export default {
     }
   },
   jobBoard: {
-    loading: true,
+    loading: false,
     error: null,
-    boards: {
-      saved: [],
-      applied: [],
-      phone: [],
-      'on-site': [],
-      offer: []
+    columns: {
+      'column-saved': { id: 'column-saved', title: 'Saved', cardIds: [] },
+      'column-applied': { id: 'column-applied', title: 'Applied', cardIds: [] },
+      'column-phone': { id: 'column-phone', title: 'Phone Interview', cardIds: [] },
+      'column-onsite': { id: 'column-onsite', title: 'On-site Interview', cardIds: [] },
+      'column-offer': { id: 'column-offer', title: 'Offer', cardIds: [] }
+    },
+    columnOrder: [
+      'column-saved',
+      'column-applied',
+      'column-phone',
+      'column-onsite',
+      'column-offer'
+    ],
+    jobs: {
+      // Example
+      // 'job-1': { id: 'job-1', title: 'Software Engineer', ...otherJobFields }
     }
   },
   burgerMenu: {
-    isOpen: true
+    isOpen: false
   }
 };

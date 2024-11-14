@@ -9,6 +9,7 @@ export const LOAD_JOBS_FAILURE = 'LOAD_JOBS_FAILURE';
 export const MOVE_JOB_REQUEST = 'MOVE_JOB_REQUEST';
 export const MOVE_JOB_SUCCESS = 'MOVE_JOB_SUCCESS';
 export const MOVE_JOB_FAILURE = 'MOVE_JOB_FAILURE';
+export const MOVE_JOB_REVERT = 'MOVE_JOB_REVERT';
 
 // Delete Job
 export const DELETE_JOB_REQUEST = 'DELETE_JOB_REQUEST';
@@ -21,7 +22,7 @@ export const RESET_JOB_BOARD = 'RESET_JOB_BOARD';
 export const loadJobsRequest = () => ({
 	type: LOAD_JOBS_REQUEST
 });
-  
+
 export const loadJobsSuccess = (jobs) => ({
 	type: LOAD_JOBS_SUCCESS,
 	payload: jobs
@@ -34,7 +35,7 @@ export const loadJobsFailure = (error) => ({
 
 // Move Job Actions
 export const moveJobRequest = () => ({
-	type: MOVE_JOB_REQUEST,
+	type: MOVE_JOB_REQUEST
 });
 
 export const moveJobSuccess = (updatedBoards) => ({
@@ -46,6 +47,11 @@ export const moveJobFailure = (error) => ({
 	type: MOVE_JOB_FAILURE,
 	payload: error
 });
+
+export const moveJobRevert = (previousBoards) => ({
+	type: MOVE_JOB_REVERT,
+	payload: previousBoards
+})
 
 // Delete Job Actions
 export const deleteJobRequest = () => ({
@@ -70,71 +76,124 @@ export const resetJobBoard = () => ({
 export const loadJobsThunk = () => async (dispatch) => {
 	dispatch(loadJobsRequest());
 	try {
-	  const response = await findAllJobsForUser();
-	  const mappedData = mapData(response.data);
-	  dispatch(loadJobsSuccess(mappedData));
+		const response = await findAllJobsForUser();
+		const mappedData = mapData(response.data);
+		dispatch(loadJobsSuccess(mappedData));
 	} catch (err) {
-	  console.error('Load jobs failed with error:', err);
-	  const errorMsg = err.response?.data?.error || err.message || 'Failed to load jobs';
-	  dispatch(loadJobsFailure(errorMsg));
+		console.error('Load jobs failed with error:', err);
+		const errorMsg = err.response?.data?.error || err.message || 'Failed to load jobs';
+		dispatch(loadJobsFailure(errorMsg));
 	}
-  };
-  
-  // Move Job Thunk
-  export const moveJobThunk = (source, destination, draggableId) => async (dispatch, getState) => {
+};
+
+// Updated Thunk for Moving Jobs
+export const moveJobThunk = (source, destination, draggableId) => async (dispatch, getState) => {
 	dispatch(moveJobRequest());
-	try {
-	  // Correctly access boards nested within jobBoard
-	  const { jobBoard: { boards } } = getState();
-  
-	  // Enhanced logging for better debugging
-	  console.log('Source:', JSON.stringify(source, null, 2));
-	  console.log('Destination:', JSON.stringify(destination, null, 2));
-	  console.log('Boards:', boards);
-  
-	  // Validate droppableIds to ensure they exist in boards
-	  if (!boards[source.droppableId] || !boards[destination.droppableId]) {
-		throw new Error(`Invalid droppableId: ${source.droppableId} or ${destination.droppableId}`);
-	  }
-  
-	  // Clone the source and destination lists to avoid mutating state directly
-	  const sourceList = Array.from(boards[source.droppableId]);
-	  const destinationList = Array.from(boards[destination.droppableId]);
-	  // Remove the job from the source list
-	  const [movedJob] = sourceList.splice(source.index, 1);
-	  // **Important:** Clone the moved job to avoid direct state mutation
-	  const updatedJob = { ...movedJob, progress_stage: destination.droppableId };
-	  // Add the cloned and updated job to the destination list
-	  destinationList.splice(destination.index, 0, updatedJob);
-	  // Update the boards object with the new lists
-	  const updatedBoards = {
-		...boards,
-		[source.droppableId]: sourceList,
-		[destination.droppableId]: destinationList,
-	  };
-	  // Log the updatedBoards structure for verification
-	  console.log('Updated Boards:', updatedBoards);
-	  // **Optional:** Ensure each board is still an array to prevent future errors
-	  Object.entries(updatedBoards).forEach(([key, value]) => {
-		if (!Array.isArray(value)) {
-		  console.error(`Board "${key}" is not an array:`, value);
-		}
-	  });  
-	  // Update the job's progress_stage in the backend
-	  console.log('Updated Job:', updatedJob);
-	  await updateJobById(draggableId, { progress_stage: updatedJob.progress_stage, user: updatedJob.user, _id: updatedJob.user, post_date: updatedJob.post_date });
-	  // Dispatch the success action with updatedBoards
-	  dispatch(moveJobSuccess(updatedBoards));
-	} catch (err) {
-	  console.error('Move job failed with error:', err);
-	  const errorMsg = err.response?.data?.error || err.message || 'Failed to move job';
-	  dispatch(moveJobFailure(errorMsg));
+
+	const { jobBoard: { columns, jobs } } = getState();
+
+	// Logging for debugging
+	console.log('Source:', JSON.stringify(source, null, 2));
+	console.log('Destination:', JSON.stringify(destination, null, 2));
+	console.log('Columns:', columns);
+	console.log('Jobs:', jobs);
+
+	// Validate droppableIds
+	const sourceColumn = columns[source.droppableId];
+	const destinationColumn = columns[destination.droppableId];
+
+	if (!sourceColumn || !destinationColumn) {
+		const errorMsg = `Invalid droppableId: ${source.droppableId} or ${destination.droppableId}`;
+		console.error(errorMsg);
+		dispatch(moveJobFailure(errorMsg));
+		return;
 	}
-  };
-  
+
+	// **Moving within the same column**
+	if (source.droppableId === destination.droppableId) {
+
+		// Create a new array of card IDs
+		const newCardIds = Array.from(sourceColumn.cardIds);
+
+		// Remove the job ID from its old position
+		newCardIds.splice(source.index, 1);
+
+		// Insert the job ID into its new position
+		newCardIds.splice(destination.index, 0, draggableId);
+
+		// Create a new column object with the updated card IDs
+		const updatedColumn = {
+			...sourceColumn,
+			cardIds: newCardIds,
+		};
+
+		// Create a new state with the updated column
+		const updatedColumns = {
+			...columns,
+			[updatedColumn.id]: updatedColumn,
+		};
+
+		// Dispatch success with updated data
+		dispatch(moveJobSuccess({ jobs, columns: updatedColumns }));
+
+		// **No need to update the backend or job's progress_stage**
+	} else {
+		const updatedJob = {
+			...jobs[draggableId],
+			progress_stage: destination.droppableId.replace('column-', '')
+		};
+
+		const updatedJobs = {
+			...jobs,
+			[draggableId]: updatedJob,
+		};
+
+		// Remove from source column
+		const sourceCardIds = Array.from(sourceColumn.cardIds);
+		sourceCardIds.splice(source.index, 1);
+
+		const updatedSourceColumn = {
+			...sourceColumn,
+			cardIds: sourceCardIds,
+		};
+
+		// Add to destination column
+		const destinationCardIds = Array.from(destinationColumn.cardIds);
+		destinationCardIds.splice(destination.index, 0, draggableId);
+
+		const updatedDestinationColumn = {
+			...destinationColumn,
+			cardIds: destinationCardIds,
+		};
+
+		const updatedColumns = {
+			...columns,
+			[updatedSourceColumn.id]: updatedSourceColumn,
+			[updatedDestinationColumn.id]: updatedDestinationColumn,
+		};
+		// Dispatch success with updated data
+		dispatch(moveJobSuccess({ jobs: updatedJobs, columns: updatedColumns }));
+
+		try {
+			// Update backend
+			console.log('updatedJob', updatedJob);
+			await updateJobById(draggableId, {
+				progress_stage: updatedJob.progress_stage,
+				user: updatedJob.user
+			});
+		} catch (err) {
+			console.error('Move job failed with error:', err);
+			const errorMsg = err.response?.data?.error || err.message || 'Failed to move job';
+			// Revert the optimistic update
+			dispatch(moveJobFailure(errorMsg));
+			dispatch(moveJobRevert({ jobs, columns }));
+		}
+	}
+};
+
 // Delete Job Thunk
 export const deleteJobThunk = (id, progressStage) => async (dispatch, getState) => {
-	dispatch(deleteJobRequest());
+	dispatch(deleteJ / mnt / c / Users / ddIdk / Desktop / github / career - deer / career - deer / backend / servicesobRequest());
 	try {
 		await deleteJobById(id);
 		const { boards } = getState();
@@ -146,76 +205,3 @@ export const deleteJobThunk = (id, progressStage) => async (dispatch, getState) 
 		dispatch(deleteJobFailure(errorMsg));
 	}
 };
-
-// export function jobBoardLoadSuccess() {
-// 	return {
-// 		type: JOBBOARD_LOAD_SUCCESS,
-// 		payload: {
-// 			loading: false
-// 		}
-// 	}
-// }
-
-// export function jobBoardLoadReset() {
-// 	return {
-// 		type: JOBBOARD_LOAD_RESET,
-// 		payload: {
-// 			loading: true
-// 		}
-// 	}
-// }
-
-// export function grabJobs() {
-// 	return async (dispatch, getState) => {
-// 		try {
-// 			const apiResponse = await (findAllJobsForUser());
-// 			dispatch(grabJobsSuccess(mapData(apiResponse.data)));
-// 			dispatch(jobBoardLoadSuccess());
-// 		}
-// 		catch (err) {
-// 			dispatch(grabJobsFail(err));
-// 		}
-// 	}
-// }
-
-// /**
-//  * @param  {Array} jobs is an array of job objects
-//  * @param  {string} key is a string that references a coresponding tile position
-//  *                  name on our intial state object.
-//  * @param  {Object} crossMoved (optional) is an object of the following format
-//  *                  { source: [{job},{job},..], destination: [{job},{job}..]  }
-//  */
-// export function moveJob(jobs,key,crossMoved = undefined) {
-// 	return {
-// 	  type: MOVE_JOB,
-// 	  payload:	crossMoved || { [key]: jobs	}
-// 	}
-// };
-
-// export function executeDeleteJob(id, jobs, progress_stage) {
-// 	return async (dispatch) => {
-// 		await deleteJobById(id);
-// 		dispatch(deleteJob(progress_stage, jobs.filter(elem => elem._id !== id)));
-// 	}
-// }
-
-// export function deleteJob(progress_stage, jobs) {
-// 	return {
-// 		type: DELETE_JOB,
-// 		payload: {[progress_stage]: jobs}
-// 	}
-// }
-  
-// export function grabJobsSuccess(data) {
-// 	return {
-// 		type: JOBS_SUCCESS,
-// 		payload: data
-// 	}
-// }
-
-// export function grabJobsFail(data) {
-// 	return {
-// 		type: JOBS_FAIL,
-// 		payload: data
-// 	}
-// }

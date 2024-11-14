@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { withRouter } from '../higherOrderComponents/withRouter';
 
 import { Nav } from '../../components/Nav';
 import Home from '../Home/Home';
@@ -29,63 +30,54 @@ class App extends Component {
     this.props.loadUser();
   }
 
-  handleLogout = () => {
-    this.props.logoutThunk();
-  }
-
   renderNav() {
-    const { user } = this.props;
+    const { router, isAuthenticated } = this.props;
+    const { location } = router;
 
-    if (user) {
-      return (
-        <BurgerMenu
-          firstName={user.firstName || 'Stray'}
-          lastName={user.lastName || 'Deer'}
-          logoutAction={this.handleLogout}
-        />
-      );
-    } else {
+    if (location.pathname === '/') {
       return <Nav />;
+    }
+
+    if (isAuthenticated) {
+      return <BurgerMenu />
     }
   }
 
   render() {
     const { loading } = this.props;
-    
+
     if (loading) {
       return <Loading />;
     }
 
     return (
-      <Router>
-        <div id="outer-container">
-          {this.renderNav()}
-          <main id="page-wrap">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/chart" element={<ProtectedRoute><Chart /></ProtectedRoute>} />
-              <Route path="/addjob" element={<ProtectedRoute><AddJob /></ProtectedRoute>} />
-              <Route path="/search" element={<ProtectedRoute><Search /></ProtectedRoute>} />
-              <Route path="/board" element={<ProtectedRoute><Board /></ProtectedRoute>} />
-              <Route path="/updatejob" element={<ProtectedRoute><UpdateJob /></ProtectedRoute>} />
-              <Route path="/forgotpw" element={<ResetPW />} />
-              <Route path="/updatepw" element={<ProtectedRoute><UpdatePW /></ProtectedRoute>} />
-              <Route path="/loading" element={<Loading />} />
-              {/* NoMatch Route for 404 */}
-              <Route path="*" element={<NoMatch />} />
-            </Routes>
-          </main>
-        </div>
-      </Router>
+      <div id="outer-container">
+        {this.renderNav()}
+        <main id="page-wrap">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/chart" element={<ProtectedRoute> <Chart /> </ProtectedRoute>} />
+            <Route path="/addjob" element={<ProtectedRoute> <AddJob /> </ProtectedRoute>} />
+            <Route path="/search" element={<ProtectedRoute> <Search /> </ProtectedRoute>} />
+            <Route path="/board" element={<ProtectedRoute> <Board /> </ProtectedRoute>} />
+            <Route path="/updatejob" element={<ProtectedRoute > <UpdateJob /> </ProtectedRoute>} />
+            <Route path="/forgotpw" element={<ResetPW />} />
+            <Route path="/updatepw" element={<ProtectedRoute> <UpdatePW /> </ProtectedRoute>} />
+            <Route path="/loading" element={<Loading />} />
+            {/* NoMatch Route for 404 */}
+            <Route path="*" element={<NoMatch />} />
+          </Routes>
+        </main>
+      </div>
     );
   }
 }
 
 // The nav bar needs to know whether we're logged in
 const mapStateToProps = (state) => ({
-  user: state.auth.user,
+  isAuthenticated: state.auth.isAuthenticated,
   loading: state.auth.loading
 });
 
@@ -94,4 +86,4 @@ const mapDispatchToProps = {
   logoutThunk
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(App));

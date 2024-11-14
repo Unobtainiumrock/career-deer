@@ -15,13 +15,14 @@ import {
   resetJobBoard
 } from './actions';
 import { selectUpdateJob } from '../UpdateJob/actions';
+
 class Board extends Component {
   componentDidMount() {
     this.props.loadJobsThunk();
   }
 
   onDragEnd = (result) => {
-    console.log(`Result inside onDragEnd in Boar class: ${JSON.stringify(result, null, 2)}`)
+    console.log(`Result inside onDragEnd in Board class: ${JSON.stringify(result, null, 2)}`)
     const { source, destination, draggableId } = result;
 
     if (!destination) {
@@ -40,7 +41,7 @@ class Board extends Component {
 
   render() {
     const { jobBoard, auth, selectUpdateJob } = this.props;
-    const { loading, error, boards } = jobBoard;
+    const { loading, error, columns, columnOrder, jobs } = jobBoard;
     const { isAuthenticated } = auth;
 
     if (!isAuthenticated) {
@@ -51,7 +52,7 @@ class Board extends Component {
       return <Loading />;
     }
 
-    const isEmpty = Object.values(boards).every((board) => board.length === 0);
+    const isEmpty = Object.values(columns).every((column) => column.cardIds.length === 0);
 
     if (isEmpty) {
       return (
@@ -95,15 +96,20 @@ class Board extends Component {
               </Col>
             </Row>
             <Row className="justify-content-center board pt-4 mx-0 px-0">
-              {Object.entries(boards).map(([key, val]) => (
-                <ProgressTile
-                  key={key}
-                  name={key}
-                  jobsList={val}
-                  selectUpdateJob={selectUpdateJob}
-                  deleteJob={this.props.deleteJobThunk}
-                />
-              ))}
+              {columnOrder.map(columnId => {
+                const column = columns[columnId];
+                const jobsList = column.cardIds.map(jobId => jobs[jobId]);
+
+                return (
+                  <ProgressTile
+                    key={column.id}
+                    column={column}
+                    jobsList={jobsList}
+                    selectUpdateJob={selectUpdateJob}
+                    deleteJob={this.props.deleteJobThunk}
+                  />
+                );
+              })}
             </Row>
           </DragDropContext>
         </div>
