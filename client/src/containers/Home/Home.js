@@ -18,9 +18,9 @@ class Home extends Component {
 
     const { isAuthenticated } = this.props;
 
-    if (isAuthenticated) {
-      return <Navigate to="/board" replace />;
-    }
+    // if (isAuthenticated) {
+    //   return <Navigate to="/board" replace />;
+    // }
 
     return (
       <div className="hide-overflow" id="top">

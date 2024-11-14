@@ -8,6 +8,7 @@ class ProtectedRoute extends React.Component {
 
     if (!isAuthenticated) {
       // Redirect to login if user is not authenticated
+      console.log('authentication status', isAuthenticated);
       return <Navigate to="/login" replace />;
     }
     // Render the protected route content if authenticated

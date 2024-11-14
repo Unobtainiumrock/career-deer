@@ -1,40 +1,34 @@
-
-// TODO: Change the progress_stage stings to constants to avoid mis-spellings?
-// TODO: Add author comments to this nice function I made.
-
 /**
- * Takes an array of objects and maps the values to the corresponding inital state's
- * jobs arrays. We never mutate the original input here.
- * @param  {Array} jobs is an array of job objects
- * @returns {Object} An object of the job objects sorted into their correct places
+ * Maps an array of job objects into a normalized structure with jobs and columns.
+ * @param {Array} jobs - Array of job objects from the API.
+ * @returns {Object} - Normalized data containing jobs and columns.
  */
 const mapData = jobs => {
-  const positions = ['saved', 'applied', 'phone', 'on-site', 'offer'];
-  const mappedData = {
-    saved: [], 
-    applied: [],
-    phone: [],
-    ['on-site']: [],
-    offer: [],
+  // const positions = ['saved', 'applied', 'phone', 'on-site', 'offer'];
+
+  const normalizedData = {
+    jobs: {},
+    columns: {
+      'column-saved': { id: 'column-saved', title: 'Saved', cardIds: [] },
+      'column-applied': { id: 'column-applied', title: 'Applied', cardIds: [] },
+      'column-phone': { id: 'column-phone', title: 'Phone Interview', cardIds: [] },
+      'column-onsite': { id: 'column-onsite', title: 'On-site Interview', cardIds: [] },
+      'column-offer': { id: 'column-offer', title: 'Offer', cardIds: [] }
+    }
   };
-  // This is same amount of possible operations as my original
-  // forEach using switch case. We use a traditional for loop here to still have
-  // access for a way to use break
-  jobs.forEach( el => {
-    for (let i = 0; i < positions.length; i++) {
-      if (el.progress_stage === positions[i]) {
-        // push [ el._id, el ] instead and then change it across all 
-        // steps of the logic. This will make updating data by id easier in the 
-        // move logic for the drag-n-drop, since we don't have access to the 
-        // objects values, only its unique ID within the onDragEnd functionality.
-        mappedData[positions[i]].push(el);
-        break;
-      }
+
+  jobs.forEach(job => {
+    const { _id, progress_stage, ...rest } = job;
+    normalizedData.jobs[_id] = { id: _id, ...rest }; // Mapping _id from backend to id on frontend.
+    const columnKey = `column-${progress_stage}`;
+    if (normalizedData.columns[columnKey]) {
+      normalizedData.columns[columnKey].cardIds.push(_id);
+    } else {
+      console.warn(`Unknown progress_stage "${progress_stage}" for job ID "${_id}"`);
     }
   });
-  
-  // console.log(mappedData);
-  return mappedData;
+
+  return normalizedData;
 }
 
 export default mapData;

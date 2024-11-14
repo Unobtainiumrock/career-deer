@@ -19,10 +19,6 @@ class AddJob extends Component {
   render() {
     const { addJob, addJobThunk } = this.props;
 
-    if (addJob.status) {
-      return <Navigate to="/board" replace />;
-    }
-
     return (
       <Container className="pt-5">
         <Row className="justify-content-center text-center">

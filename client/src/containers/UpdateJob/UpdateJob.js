@@ -87,9 +87,9 @@ const UpdateJob = ({
     }
   }, [updateJob.job, resetUpdateJob]);
 
-  if (!user) {
-    return <Navigate to="/unauthorized" replace />;
-  }
+  // if (!user) {
+  //   return <Navigate to="/unauthorized" replace />;
+  // }
 
   if (updateJob.loading) {
     return <Loading />;
@@ -99,9 +99,9 @@ const UpdateJob = ({
     return <ErrorMessage message={updateJob.error} />;
   }
 
-  if (updateJob.status || !updateJob.job) {
-    return <Navigate to="/board" replace />;
-  }
+  // if (updateJob.status || !updateJob.job) {
+  //   return <Navigate to="/board" replace />;
+  // }
 
   const updateJobValues = (values) => {
     updateJobThunk({ ...values, _id: updateJob.job._id });
