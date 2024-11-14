@@ -61,7 +61,7 @@ const jobSchema = new Schema({
     ref: 'User',
     required: true
   }
-})
+});
 
 const Job = mongoose.model('Job', jobSchema);
 
