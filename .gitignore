@@ -147,3 +147,4 @@ x86/
 *.out
 *.toc
 /backend/config/keys.js
+.editorconfig
