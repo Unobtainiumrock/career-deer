@@ -10,6 +10,7 @@ module.exports = {
     }
   },
   createJob: async (req, res) => {
+    console.log('req.body in createJob', req.body);
     try {
       const newJob = {
         ...req.body,
@@ -31,14 +32,15 @@ module.exports = {
   },
   update: async (req, res) => {
     try {
-      let query = { _id: req.body._id, user: req.body.user, post_date: req.body.post_date };
-      console.log('Query:', query);
-      const newJob = {
-        ...req.body,
-        post_date: new Date(req.body.post_date),
+      const jobId = req.params.id;
+      const userId = req.user.id;
+      const query = { _id: jobId, user: userId };
+
+      const updatedJob = {
+        progress_stage: req.body.progress_stage,
         last_update: new Date()
-      };
-      res.json(await db.Job.findOneAndUpdate(query, { $set: newJob }, { new: true }));
+      }
+      res.json(await db.Job.findOneAndUpdate(query, { $set: updatedJob }, { new: true }));
     } catch (err) {
       res.status(422).json(err);
     }
