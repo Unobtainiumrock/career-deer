@@ -179,6 +179,12 @@ warning " > chartjs-plugin-datalabels@0.3.0" has incorrect peer dependency "char
 
 40. **Split apart the BurgerMenu into functional and container components**
     self-explanatory
+
+41. **Implement Optimistic Updates on Frontend**
+    Essentially, update the UI by reflecting changes immediately, while the backend update is in progress. Some places already have this.
+
+42. **Revisit and Weigh Costs of Preserving Ordering**
+    To have order of tile elements within columns persist is expensive. Revisit later to determine if its desired.
 # For Me
 
 I need to incorproate my following sentiment somewhere into why I am reviving Career Deer:
